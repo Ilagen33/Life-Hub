@@ -1,0 +1,135 @@
+/* Import TAILWIND */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import font navbar */
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
+
+/* RESET */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* GENERAL*/
+.App {
+    border: solid 20px #453D3A;
+}
+
+.Landing-page {
+    background-color: #DFD8D5;
+
+}
+
+/* LANDING PAGE */
+
+.navnav {
+    border-top: solid 30px #DFD8D5;
+}
+.home-hero {
+    padding: 20px;
+}
+
+.home-hero h1 {
+    font-size: 200px;
+}
+
+.home-hero h2 {
+    font-size: 30px;
+    text-align: center;
+    position: absolute;
+    top: 48%;
+    left: 21.5%;
+    margin: 0;
+    transform: scaleY(-1);
+    transform: rotate(90deg);
+}
+
+.home-hero h3 {
+    padding-top: 200px;
+    text-align: end;
+    font-size: 35px;
+    width: 50%;
+    font-weight: 800;
+}
+
+.home-hero .second-h3 {
+    text-align: start;
+    width: 100%;
+    padding: 20px 0 40px 55%
+}
+
+.home-hero button {
+    display: block;
+    margin: 0 auto;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff5d6;
+    padding: 15px 20px;
+    background-color: #CF4307;
+    border: none;
+    box-shadow: 7px 5px 6px 8px;
+}
+
+/* LOGIN PAGE */
+.h1-login {
+    color:#ff8400;
+}
+
+.bottone-login1 {
+    background-color: #CF4307;
+}
+
+.bottone-login2 {
+    background-color: #453D3A;
+}
+
+/* DASHBOARD */
+.dashboard {
+    background-color: #F5F5F5;
+
+}
+
+main {
+    background-color: #F5F5F5;
+}
+
+main h1 {
+    color: #CF4307;
+    font-size: 100px;
+}
+
+main div h2 {
+    color: #5E6D7A;
+}
+
+/* DASHNAV */
+.side-nav {
+    background-color: #91A3B0 ;
+}
+
+.side-nav ul li a {
+    font-weight:100;
+    margin: 0 100px;
+    padding:0;
+}
+
+.dropdown.relative button {
+    background-color: #CF4307;
+}
+
+/* CALENDAR DASHBOARD */
+
+main .react-calendar {
+    border: none;
+}
+
+.react-calendar abbr {
+    text-decoration: none;
+}
+.react-calendar__navigation button {
+    color: #91A3B0;
+}
