@@ -20,6 +20,10 @@ import moodRoutes from "./routes/moodRoutes.js"
 import errorHandler from './middlewares/ErrorHandler.js';
 import authMiddleware from './middlewares/authMiddleware.js';
 
+import cron from 'node-cron';
+import sendReminderEmail from './utils/sendReminderEmail'; // Funzione di invio email
+import User from './models/User'; // Modello utente
+
 dotenv.config();
 
 const app = express();
@@ -43,6 +47,19 @@ const corsOptions = {
 
 const PORT = process.env.PORT || 5000;
 
+
+// Imposta un cron job giornaliero per inviare promemoria alle 9:00
+cron.schedule('0 9 * * *', async () => {
+    try {
+      const users = await User.find(); // Trova tutti gli utenti
+      users.forEach(user => {
+        sendReminderEmail(user.email, 'Promemoria Diario', 'Ricordati di aggiornare il tuo diario oggi!');
+      });
+      console.log('Promemoria inviati a tutti gli utenti.');
+    } catch (err) {
+      console.error('Errore durante l\'invio dei promemoria:', err);
+    }
+  });
 app.use(limiter);
 app.use(cors(corsOptions));
 app.use(express.json());

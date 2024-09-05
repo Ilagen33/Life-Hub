@@ -3,7 +3,8 @@ import axiosInstance from '../../utils/axiosInstance';
 import { toast } from 'react-toastify'
 const TasksComponent = () => {
     const [tasks, setTasks] = useState([]);
-    
+    const [priority, setPriority] = useState('media');
+
     useEffect(() => {
         fetchTasks();
     },[]);
@@ -100,6 +101,15 @@ const TasksComponent = () => {
                     className="border border-gray-300 rounded-l px-3 py-2 focus:outline-none w-full"
                     placeholder="Aggiungi una nuova attività"
                 />
+                 {/* Campo Priorità */}
+                <div>
+                    <label>Priorità:</label>
+                    <select value={priority} onChange={(e) => setPriority(e.target.value)}>
+                        <option value="bassa">Bassa</option>
+                        <option value="media">Media</option>
+                        <option value="alta">Alta</option>
+                    </select>
+                </div>
                 <button
                     onClick={addTask}
                     className="bg-blue-500 text-white px-4 py-2 rounded-r"

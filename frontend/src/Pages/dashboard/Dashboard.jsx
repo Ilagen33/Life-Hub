@@ -5,6 +5,7 @@ import TasksComponent from './TasksComponent.jsx';
 import StatisticsComponent from "./statisticsComponent.jsx";
 import DiaryPage from "../DiaryPage.jsx";
 import { ToastContainer } from "react-toastify";
+import ReminderForm from "./Promemoria.jsx";
 
 
 export default function Dashboard() {
@@ -19,6 +20,7 @@ export default function Dashboard() {
                         <TasksComponent /> 
                         <StatisticsComponent /> 
                         <DiaryPage />
+                        <ReminderForm />
                     </div>
                     <ToastContainer />
                 </main>
