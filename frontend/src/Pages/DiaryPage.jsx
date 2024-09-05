@@ -7,6 +7,7 @@ const DiaryPage = () => {
   const [content, setContent] = useState('');
   const [media, setMedia] = useState(null);
   const [diaryEntries, setDiaryEntries] = useState([]);
+  const [currentEntryId, setCurrentEntryId] = useState(null);
 
   // Funzione per caricare i post di diario esistenti al caricamento della pagina
   useEffect(() => {
@@ -53,7 +54,7 @@ const handleSubmit = async (e) => {
   formData.append('title', title);
   formData.append('content', content);
   if (media) {
-    formData.append('media', media);
+    formData.append('media', media); // Aggiungi solo se esiste un file
   }
 
   try {
@@ -71,10 +72,10 @@ const handleSubmit = async (e) => {
       : [res.data, ...diaryEntries];
 
     setDiaryEntries(updatedEntries);
-    setTitle('');
-    setContent('');
-    setMedia(null);
-    setCurrentEntryId(null); // Reset dell'ID dopo la modifica o l'inserimento
+    setTitle('');   // Resetta il titolo
+    setContent(''); // Resetta il contenuto
+    setMedia(null); // Resetta il file media
+    setCurrentEntryId(null); // Resetta l'ID dopo la modifica o l'inserimento
     alert(currentEntryId ? 'Voce di diario aggiornata!' : 'Voce di diario aggiunta con successo!');
   } catch (err) {
     console.error('Errore durante l\'invio del diario:', err);
@@ -82,34 +83,6 @@ const handleSubmit = async (e) => {
   }
 };
 
-  // Funzione per gestire l'invio di una nuova voce di diario
-  const handleSubmits = async (e) => {
-    e.preventDefault();
-
-    // Creazione di un FormData per includere il file e i dati testuali
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('content', content);
-    formData.append('media', media);
-
-    try {
-      // Invia i dati al backend
-      const res = await axios.post('/diary', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-
-      // Aggiorna l'elenco delle voci di diario
-      setDiaryEntries([res.data, ...diaryEntries]);
-      // Resetta il form
-      setTitle('');
-      setContent('');
-      setMedia(null);
-      alert('Voce di diario aggiunta con successo!');
-    } catch (err) {
-      console.error('Errore nell\'invio del diario:', err);
-      alert('Errore durante l\'invio del diario');
-    }
-  };
 
   // Funzione per eliminare una voce di diario
 const handleDelete = async (id) => {
@@ -148,8 +121,10 @@ const handleDelete = async (id) => {
           <label>Media (opzionale):</label>
           <input type="file" onChange={handleFileChange} accept="image/*,video/*,audio/*" />
         </div>
-        <button type="submit">Aggiungi Voce</button>
-        <button onClick={() => handleEdit(entry)}>Modifica</button>
+        <button type="submit">
+          {currentEntryId ? 'Aggiorna Voce' : 'Aggiungi Voce'}  
+        </button>
+        <button onClick={() => handleEdit()}>Modifica</button>
 
       </form>
 
@@ -176,13 +151,14 @@ const handleDelete = async (id) => {
           </li>
         ))}
       </ul>
-      // Bottoni di navigazione tra le pagine
-<button disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
-  Pagina Precedente
-</button>
-<button onClick={() => handlePageChange(currentPage + 1)}>
-  Pagina Successiva
-</button>
+
+      {/* Bottoni di navigazione tra le pagine */}  
+      <button disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
+        Pagina Precedente
+      </button>
+      <button onClick={() => handlePageChange(currentPage + 1)}>
+        Pagina Successiva
+      </button>
     </div>
   );
 };
