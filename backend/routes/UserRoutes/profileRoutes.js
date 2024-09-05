@@ -55,7 +55,7 @@ router.put(
 )
 
 router.delete(
-    '/delete',
+    '/delete/:id',
     authMiddleware,
     deleteUser
 )

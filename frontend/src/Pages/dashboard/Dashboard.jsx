@@ -3,6 +3,7 @@ import DashNav from "../../Components/dashNavbar.jsx";
 import CalendarComponent from './CalendarComponent.jsx';
 import TasksComponent from './TasksComponent.jsx';
 import StatisticsComponent from "./statisticsComponent.jsx";
+import DiaryPage from "../DiaryPage.jsx";
 import { ToastContainer } from "react-toastify";
 
 
@@ -17,6 +18,7 @@ export default function Dashboard() {
                         <CalendarComponent />
                         <TasksComponent /> 
                         <StatisticsComponent /> 
+                        <DiaryPage />
                     </div>
                     <ToastContainer />
                 </main>

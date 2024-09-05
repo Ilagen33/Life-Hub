@@ -11,6 +11,11 @@ import cookieParser from 'cookie-parser';
 import taskRoutes from "./routes/taskRoutes.js"
 import userRoutes from "./routes/UserRoutes/userRoutes.js"
 import profileRoutes from "./routes/UserRoutes/profileRoutes.js"
+import diaryRoutes from "./routes/diaryRoutes.js"
+import activityRoutes from "./routes/activityRoutes.js"
+import workoutPlanRoutes from "./routes/workoutPlanRoutes.js"
+import healthRoutes from "./routes/healthRoutes.js"
+import moodRoutes from "./routes/moodRoutes.js"
 
 import errorHandler from './middlewares/ErrorHandler.js';
 import authMiddleware from './middlewares/authMiddleware.js';
@@ -59,9 +64,14 @@ mongoose.connect(process.env.DB_URI)
     .then(() => console.log("DB connesso"))
     .catch((err) => console.error("DB: errore nella connessione", err));
 
-app.use("/api", taskRoutes);
-app.use("/api", userRoutes);
-app.use("/api", profileRoutes)
+app.use("/api", taskRoutes);            //1
+app.use("/api", userRoutes);            //2
+app.use("/api", profileRoutes);         //3
+app.use("/api", diaryRoutes);           //4
+app.use("/api", activityRoutes);        //5
+app.use("/api", workoutPlanRoutes);     //6
+app.use("/api", healthRoutes);          //7
+app.use("/api", moodRoutes);            //8
 
 app.use(errorHandler);
 app.use(authMiddleware);

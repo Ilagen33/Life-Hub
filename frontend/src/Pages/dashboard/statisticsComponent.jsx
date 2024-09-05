@@ -14,7 +14,7 @@ const data = [
 const StatisticsComponent = () => {
     return (
         <div className="p-6 bg-white shadow-md rounded-md">
-            <h2 className="text-xl font-semibold mb-4">Andamento delle Attività</h2>
+            <h2 className="text-xl font-semibold mb-4">Andamento delle Task</h2>
             <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={data} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" />

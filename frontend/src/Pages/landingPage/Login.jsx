@@ -1,17 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // Importa il modulo axios per effettuare le richieste HTTP
 import logo from '../../assets/lifehubfinal2.png';
 import { FaGoogle } from "react-icons/fa";
 export default function Login() {
-
     const navigate = useNavigate();
-
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     });
-
     const [error, setError] = useState("");
 
     // Configura un'istanza di axios con l'URL di base
@@ -20,16 +17,14 @@ export default function Login() {
     });
 
     const loginUser = async (credentials) => {
-        console.log(credentials)
         try {
 
           const response = await api.post("/login", credentials); // Effettua la richiesta di login
           console.log("Risposta API login:", response.data); // Log della risposta per debugging
-          console.log(response.data.token)
-          console.log(response)
           localStorage.setItem('token', response.data.token);
+          navigate("/Dashboard");
           return response.data; // Restituisce i dati della risposta
-          
+
         } catch (error) {
           console.error("Errore nella chiamata API di login:", error); // Log dell'errore per debugging
           setError("Email o password errati"); // Imposta l'errore nello stat
@@ -50,8 +45,7 @@ export default function Login() {
 
         try {
             const response = await loginUser(formData);
-            localStorage.setItem("token", response.token);
-            console.log("Login effettuati con successo!");
+            console.log("Login effettuati con successo!", response);
             navigate("/Dashboard");
         } catch (error) {
             console.error("Errore durante il login:", error);

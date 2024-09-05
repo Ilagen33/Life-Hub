@@ -69,15 +69,23 @@ export const loginUser = async (req, res, next) => {
         await user.save();
 
         const token = user.generateAuthToken();
+        // res.json({token});
 
+        // if(!token) {
+        //     console.log("Token non generato")
+        //     token= "token non generato"
+        //     console.log(token)
+        //     return res.status(500).json({message: "Errore nella generazione del token"});
+        // }
         res
             .status(200)
             .json({
                 token,
-                message: "Login eseguito con successo"
+                message: "Login eseguito con successo",
+                success: true,
             })
-            .redirect("/Dashboard");
     } catch (err) {
+        console.error("Errore durante il login:",err);
         next(err);
     }
 };
@@ -119,7 +127,7 @@ export const updateUser = async (req, res, next) => {
 export const deleteUser = async (req, res, next) => {
     
     try {
-        const user = await User.findByIdAndDelete(req.user._id);
+        const user = await User.findByIdAndDelete(req.params.id);
 
     if(!user) {
         return res

@@ -28,7 +28,7 @@ function App() {
             <Route path="/To-Do" element= {<PrivateRoute><ToDo/></PrivateRoute>} />
             <Route path="/Food" element= {<PrivateRoute><Food /></PrivateRoute>} />
             <Route path="/Exercise" element= {<PrivateRoute><Exercise /></PrivateRoute>} />
-            <Route path="/Dashboard" element= {<PrivateRoute><Dashboard /></PrivateRoute>} />
+            <Route path="/Dashboard" element= {<Dashboard />} />
           
           </Routes>
         

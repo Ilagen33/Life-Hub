@@ -130,6 +130,74 @@ main .react-calendar {
 .react-calendar abbr {
     text-decoration: none;
 }
+
 .react-calendar__navigation button {
     color: #91A3B0;
 }
+
+/* DIARY PAGE */
+.diary-page {
+    margin: 20px;
+    padding: 20px;
+  }
+  
+  .diary-page h1 {
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  .diary-page form {
+    margin-bottom: 30px;
+  }
+  
+  .diary-page form div {
+    margin-bottom: 15px;
+  }
+  
+  .diary-page form label {
+    font-weight: bold;
+  }
+  
+  .diary-page form input,
+  .diary-page form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .diary-page form button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .diary-page form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .diary-page ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .diary-page ul li {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+  }
+  
+  .diary-page ul li img,
+  .diary-page ul li video {
+    max-width: 100%;
+    margin-top: 10px;
+  }
+  
+  .diary-page ul li audio {
+    margin-top: 10px;
+  }
+  

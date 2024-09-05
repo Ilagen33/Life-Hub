@@ -49,7 +49,7 @@ const TasksComponent = () => {
     
     return (
         <div className="p-6 bg-white shadow-md rounded-md">
-            <h2 className="text-xl font-semibold mb-4">Le tue Attività</h2>
+            <h2 className="text-xl font-semibold mb-4">Le tue Tasks</h2>
             <ul className="space-y-3">
                 {tasks.map(task => (
                     <li key={task.id} className="flex items-center space-x-3">

@@ -10,6 +10,7 @@ import { query, body, validationResult } from 'express-validator';
 router.get(
 
     "/task",
+
     [
         // Validazione e sanitizzazione dei parametri di query
         //Con la libreria 'express-validator', i parametri di query vengono controllati per assicurarsi che contengano valori corretti e attesi
@@ -72,6 +73,7 @@ router.get(
     },
     authMiddleware,
     async (req, res, next) => {
+        console.log("Utente autenticato ID:", req.user._id);
 
         try {
             //PAGINAZIONE
@@ -95,16 +97,19 @@ router.get(
 
             // QUERY AL DATABASE CON FILTRI, ORDINAMENTO E PAGINAZIONE
             //Nella query al database sono integrati: filtri, ordinamento e paginazione
-            const tasks = await Task.find({user: req.user._id})
+            const tasks = await Task.find({
+                user: req.user._id, 
+                ...filter
+            })
                 .sort({ [ordinamento]: direzOrdine })
                 .skip(salta)
                 .limit(limite);
 
-            const totale = await Task.countDocuments(filter);
+            const totale = await Task.countDocuments({user: req.user._id});
 
             res
                 .json({
-                    tasks,
+                    tasks: tasks,
                     currentPage: page,
                     totalPages: Math.ceil(totale/limite), //ceil approssima per eccesso, il rapporto tra il totale degli elementi e il limite delle pagine, in questo modo ottengo il numero di pagine totali
                     totalTasks: totale,
@@ -194,16 +199,16 @@ router.post(
     },
     authMiddleware,
     async (req, res, next) => {
-    const { name, completed} = req.body;
-    try {
-        const newTask = new Task({ name, completed, user: req.user.id });
-        const savedTask = await newTask.save();
+        const { title, category, content, cover, dueDate, status } = req.body;
+        try {
+            const newTask = new Task({ title, category, content, cover, dueDate, status, user: req.user.id });
+            const savedTask = await newTask.save();
 
-        res
-            .status(201).json({
-                savedTask,
-                message:"Nuovo Task Aggiunto!!" 
-            });
+            res
+                .status(201).json({
+                    savedTask,
+                    message:"Nuovo Task Aggiunto!!" 
+                });
 
     } catch (err) {
         next(err);
@@ -281,12 +286,12 @@ router.put(
         }
 
         const { id } = req.params;
-        const {name, completed} = req.body;
+        const update = req.body;
     
         try {
         const updatedTask = await Task.findByIdAndUpdate(
             {_id: id, user: req.user._id},
-            {name, completed},
+            update,
             { new: true, runValidators: true}
         );
 
@@ -311,7 +316,7 @@ router.put(
 
 // Rotta per cancellare un'attività
 router.delete(
-    '/:id',
+    '/task/:id',
     validateObjectId,
     authMiddleware,
     async (req, res, next) => {

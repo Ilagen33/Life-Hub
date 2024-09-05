@@ -33,10 +33,13 @@ const userSchema = new Schema(
 
         dataNascita: {
             type: Date,
+            required: true,
         },
 
         password: {
             type: String,
+            required: true,
+            minlength: 8,
         },
 
         loginAttempts: {
@@ -67,17 +70,16 @@ userSchema.pre('save', async function(next) {
 
 // Confronta la password inserita con quella criptata
 userSchema.methods.comparePassword = async function(candidatePassword) {
-    const user = this;
     const isValid = await bcrypt.compare(candidatePassword, this.password);
     return isValid;
 };
 
 // Genera un token JWT per l'utente
-userSchema.methods.generateAuthToken = async function() {
-    const user = this;
-    const token = await jwt.sign({ _id: this._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    return token;
+userSchema.methods.generateAuthToken = function() {
+    // Genera e ritorna direttamente il token senza assegnarlo a una variabile 'token'
+    return jwt.sign({ _id: this._id.toString() }, process.env.JWT_SECRET, { expiresIn: '7d' });
 };
+
 
 const User = model("User", userSchema);
 

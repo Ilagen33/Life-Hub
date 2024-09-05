@@ -1,9 +1,16 @@
 import { Schema, model } from "mongoose";
+import mongoose from 'mongoose';
 import validator from 'validator';
 
 
 const TaskSchema = new Schema(
-    {
+    {   
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: [true, 'L\'utente è obbligatorio'],
+        },
+
         category: {
             type: String,
             trim: true,

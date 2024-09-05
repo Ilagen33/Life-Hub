@@ -1,6 +1,5 @@
 import express from "express";
 import { query, body, validationResult } from 'express-validator';
-import authMiddleware from "../../middlewares/authMiddleware.js";
 import { loginUser, registerUser } from "../../controllers/userController.js";
 import rateLimit from 'express-rate-limit';
 import passport from "../../config/passportConfig.js";
@@ -14,39 +13,39 @@ const loginRateLimiter = rateLimit({
 
 router.post(
     "/register",
-    // [
-    //     body("username")
-    //         .notEmpty()
-    //         .withMessage("Il nome utente è obbligatorio")
-    //         .isLength({ max:50 })
-    //         .withMessage("Il nome utente non può superare i 50 caratteri")
-    //         .trim()
-    //         .escape(),
+    [
+        body("username")
+            .notEmpty()
+            .withMessage("Il nome utente è obbligatorio")
+            .isLength({ max:50 })
+            .withMessage("Il nome utente non può superare i 50 caratteri")
+            .trim()
+            .escape(),
 
-    //     body("email")
-    //         //Rimozione di punti nel nome utente, conversione in minuscolo, rimozione di alias
-    //         //Utile ad archiviare email in un database in un formato standard, 
-    //         //per evitare la registrazione di utenti diversi con varianti dello stesso indirizzo email, 
-    //         //confrontare email provenienti da diverse fonti per verificare se appartengono allo stesso utente
-    //         .isEmail()
-    //         .withMessage("Inserisci un indirizzo email valido")
-    //         .trim()
-    //         .normalizeEmail(),
+        body("email")
+            //Rimozione di punti nel nome utente, conversione in minuscolo, rimozione di alias
+            //Utile ad archiviare email in un database in un formato standard, 
+            //per evitare la registrazione di utenti diversi con varianti dello stesso indirizzo email, 
+            //confrontare email provenienti da diverse fonti per verificare se appartengono allo stesso utente
+            .isEmail()
+            .withMessage("Inserisci un indirizzo email valido")
+            .trim()
+            .normalizeEmail(),
 
-    //     body("password")
-    //         .isLength( {min: 8} )
-    //         .withMessage("La password deve avere almeno 8 caratteri")
-    //         .matches(/\d/)
-    //         .withMessage("La password deve contenere almeno un numero"),
+        body("password")
+            .isLength( {min: 8} )
+            .withMessage("La password deve avere almeno 8 caratteri")
+            .matches(/\d/)
+            .withMessage("La password deve contenere almeno un numero"),
 
-    //     body("confirmPassword")
-    //         .custom((value, {req }) => {
-    //             if(value !== req.body.password) {
-    //                 throw new Error("Le password non coincidono");
-    //             }
-    //             return true;
-    //         }),     
-    // ],
+        body("confirmPassword")
+            .custom((value, {req }) => {
+                if(value !== req.body.password) {
+                    throw new Error("Le password non coincidono");
+                }
+                return true;
+            }),     
+    ],
     (req, res, next) => {
 
         // Verifica se ci sono errori di validazione
@@ -69,7 +68,6 @@ router.post(
 
 router.post(
     "/login",
-    authMiddleware,
     loginRateLimiter,
     [
         body("email")
@@ -81,7 +79,7 @@ router.post(
         body("password")
             .notEmpty()
             .withMessage("La password è obbligatoria")
-        
+     
     ],
     (req, res, next) => {
         const errors = validationResult(req);
