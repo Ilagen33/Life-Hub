@@ -24,6 +24,12 @@ const MoodTrackerSchema = new Schema(
         date: {
             type: Date,
             default: Date.now
+        },
+
+        note: {
+            type: String,
+            trim: true,
+            maxlength: 1000,
         }
     },
     {

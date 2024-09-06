@@ -20,6 +20,8 @@ import placesRoutes from "./routes/placesRoutes.js"
 import errorHandler from './middlewares/ErrorHandler.js';
 import authMiddleware from './middlewares/authMiddleware.js';
 import financeRoutes from './routes/financeRoutes.js';
+import recipeRoutes from './routes/recipeRoutes.js';
+
 
 import cron from 'node-cron';
 import sendReminderEmail from './services/emailService.js'; // Funzione di invio email
@@ -93,6 +95,7 @@ app.use("/api", moodRoutes);            //8
 app.use('/api', placesRoutes);          //9
 app.use('/api', financeRoutes);         //10
 app.use('/api', mindfulnessRoutes);     //11
+app.use('/api/', recipeRoutes);         //12
 
 
 app.use(errorHandler);
