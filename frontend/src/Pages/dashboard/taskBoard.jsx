@@ -55,10 +55,20 @@ const TaskBoard = () => {
       data={{ lanes }}
       draggable
       laneDraggable={false}
-      handleDragEnd={(cardId, sourceLaneId, targetLaneId) => {
-        const updatedTask = tasks.find((task) => task._id === cardId);
-        updatedTask.status = targetLaneId;
-        axios.put(`/tasks/${cardId}`, updatedTask);
+      handleDragEnd={async (cardId, sourceLaneId, targetLaneId) => {
+        // Aggiorna lo stato del task nel backend
+        try {
+          const updatedTask = tasks.find((task) => task._id === cardId);
+          updatedTask.status = targetLaneId;
+          await axios.put(`/tasks/${cardId}`, updatedTask);
+
+          // Aggiorna lo stato delle attività
+          setTasks(tasks.map((task) =>
+            task._id === cardId ? { ...task, status: targetLaneId } : task
+          ));
+        } catch (err) {
+          console.error('Errore nell\'aggiornamento dello stato del task:', err);
+        }
       }}
     />
   );

@@ -1,21 +1,29 @@
-import React from 'react';
-import { Line } from 'react-chartjs-2';
+import React, { useState, useEffect } from 'react';
+import HealthTracker from '../Pages/dashboard/HealthChart';
+import axios from '../axiosInstance';
 
-const HealthTracker = ({ healthData }) => {
-  const data = {
-    labels: healthData.map((entry) => entry.date),
-    datasets: [
-      {
-        label: 'Peso',
-        data: healthData.map((entry) => entry.weight),
-        fill: false,
-        backgroundColor: 'rgb(75, 192, 192)',
-        borderColor: 'rgba(75, 192, 192, 0.2)',
-      },
-    ],
-  };
+const HealthPage = () => {
+  const [healthData, setHealthData] = useState([]);
 
-  return <Line data={data} />;
+  useEffect(() => {
+    const fetchHealthData = async () => {
+      try {
+        const res = await axios.get('/api/health'); // Endpoint per ottenere i dati di salute
+        setHealthData(res.data);
+      } catch (err) {
+        console.error('Errore nel caricamento dei dati di salute:', err);
+      }
+    };
+
+    fetchHealthData();
+  }, []);
+
+  return (
+    <div>
+      <h1>Monitoraggio della Salute</h1>
+      <HealthTracker healthData={healthData} />
+    </div>
+  );
 };
 
-export default HealthTracker;
+export default HealthPage;

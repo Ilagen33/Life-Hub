@@ -28,7 +28,22 @@ const HealthDataSchema = new Schema(
             type: Date,
             default: Date.now,
             required: true
-        }
+        },
+
+        diet: {
+            type: String, // Descrizione della dieta o calorie
+            required: false,
+        },
+          
+         bloodPressure: {
+            systolic: { type: Number, required: false },
+            diastolic: { type: Number, required: false },
+        },
+
+        heartRate: {
+            type: Number,
+            required: false,
+        },
     },
     {
         collection: "HealthDatas",

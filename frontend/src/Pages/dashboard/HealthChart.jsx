@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
+
+
 import axios from '../axiosInstance';
 
 const HealthChart = () => {
@@ -37,10 +40,35 @@ const HealthChart = () => {
     ]
   };
 
+  const options = {
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true
+          }
+        }
+      ]
+    }
+  };
+
+  const dati = {
+    labels: productivityData.map(entry => entry.week),
+    datasets: [
+      {
+        label: 'Attività Completate',
+        data: productivityData.map(entry => entry.completedTasks),
+        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }
+    ]
+  };
   return (
     <div>
       <h2>Monitoraggio della Salute</h2>
-      <Line data={data} />
+      <Line data={data} options={options} />
+      <Bar data={dati} />;
     </div>
   );
 };

@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // Importa il modulo axios per effettuare le richieste HTTP
 import logo from '../../assets/lifehubfinal2.png';
 import { FaGoogle } from "react-icons/fa";
+import { auth } from './services/firebase';
+
 export default function Login() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -11,6 +13,14 @@ export default function Login() {
     });
     const [error, setError] = useState("");
 
+    const handleLogin = async () => {
+        try {
+          await auth.signInWithEmailAndPassword(formData.email, formData.password);
+          alert('Accesso riuscito!');
+        } catch (error) {
+          alert('Errore durante il login: ' + error.message);
+        }
+    };
     // Configura un'istanza di axios con l'URL di base
     const api = axios.create({
         baseURL: 'http://localhost:5000/api',
@@ -112,6 +122,7 @@ export default function Login() {
                                 <button
                                     type="submit"
                                     className="text-white w-full py-3 rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-600 transition font-bold mt-4 bottone-login1"
+                                    onClick={handleLogin}
                                 >
                                     Accedi
                                 </button>
