@@ -3,6 +3,8 @@ import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import "dotenv/config";
+import express from "express";
+const router = express.Router();
 
 // Configurazione di Cloudinary con le credenziali dall'ambiente
 cloudinary.config({

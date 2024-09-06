@@ -21,8 +21,8 @@ import errorHandler from './middlewares/ErrorHandler.js';
 import authMiddleware from './middlewares/authMiddleware.js';
 
 import cron from 'node-cron';
-import sendReminderEmail from './utils/sendReminderEmail'; // Funzione di invio email
-import User from './models/User'; // Modello utente
+import sendReminderEmail from './services/emailService.js'; // Funzione di invio email
+import User from './models/User.js'; // Modello utente
 
 dotenv.config();
 

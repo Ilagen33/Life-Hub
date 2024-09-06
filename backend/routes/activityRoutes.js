@@ -1,6 +1,8 @@
 import express from "express";
 import Activity from "../models/Activity.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
+import { query, body, validationResult } from 'express-validator';
+import validateObjectId from "../middlewares/ValidateId.js";
 
 const router = express.Router();
 
@@ -13,20 +15,16 @@ router.post(
             .trim(),
 
         body("date")
-            .Optional()
-            .withMessage("La data di scadenza non è obbligatoria"),
+            .optional(),
 
         body("status")
-            .Optional()
-            .withMessage("Lo stato non è obbligatorio"),
+            .optional(),
 
         body("priority")
-            .Optional()
-            .withMessage("La priorità non è obbligatoria"),
+            .optional(),
 
         body("notes")
-            .Optional()
-            .withMessage("La descrizione non è obbligatoria")
+            .optional()
             .trim(),
     ],
     (req, res, next) => {
@@ -146,20 +144,16 @@ router.put(
             .trim(),
 
         body("date")
-            .Optional()
-            .withMessage("La data di scadenza non è obbligatoria"),
+            .optional(),
 
         body("status")
-            .Optional()
-            .withMessage("Lo stato non è obbligatorio"),
+            .optional(),
 
         body("priority")
-            .Optional()
-            .withMessage("La priorità non è obbligatoria"),
+            .optional(),
 
         body("notes")
-            .Optional()
-            .withMessage("La descrizione non è obbligatoria")
+            .optional()
             .trim(),
     ],
     validateObjectId,
