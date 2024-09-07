@@ -20,7 +20,8 @@ import placesRoutes from "./routes/placesRoutes.js"
 import errorHandler from './middlewares/ErrorHandler.js';
 import authMiddleware from './middlewares/authMiddleware.js';
 import financeRoutes from './routes/financeRoutes.js';
-import recipeRoutes from './routes/recipeRoutes.js';
+import recipeRoutes from './routes/RecipeRoutes.js';
+import noteRoutes from './routes/noteRoutes.js';
 
 
 import cron from 'node-cron';
@@ -96,6 +97,8 @@ app.use('/api', placesRoutes);          //9
 app.use('/api', financeRoutes);         //10
 app.use('/api', mindfulnessRoutes);     //11
 app.use('/api/', recipeRoutes);         //12
+app.use('/api', noteRoutes);            //13
+
 
 
 app.use(errorHandler);
