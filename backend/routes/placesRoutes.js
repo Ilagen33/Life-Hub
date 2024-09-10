@@ -1,9 +1,10 @@
 import express from 'express';
+import { query, body, validationResult } from 'express-validator';
 
 const router = express.Router();
 
 // Rotta per ottenere luoghi basati su query di ricerca (ad esempio, ristoranti, attrazioni)
-router.get('/places', async (req, res) => {
+router.get('/places', async (req, res, next) => {
   const { query, location, radius } = req.query;
   
   try {
@@ -19,7 +20,7 @@ router.get('/places', async (req, res) => {
     res.status(200).json(response.data.results);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Errore durante il recupero dei dati da Google Places.' });
+    next(error);
   }
 });
 

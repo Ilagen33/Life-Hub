@@ -1,6 +1,7 @@
 import express from "express";
 import MoodTracker from "../models/MoodTracker.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
+import { query, body, validationResult } from 'express-validator';
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ router.post(
         body("intensity")
             .isInt({ min: 1, max: 10 })
             .withMessage("Intensity must be between 1 and 10")
-            .isNotEmpty()
+            .notEmpty()
             .withMessage("Intensity is required"),
 
         body("date")

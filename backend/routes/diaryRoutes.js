@@ -1,11 +1,11 @@
 import express from 'express';
 import DiaryPage from '../models/DiaryPage.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
-
-const router = express.Router();
 import { query, body, validationResult } from 'express-validator';
 import cloudinaryUploader from '../config/cloudinaryConfig.js';
 import validateObjectId from '../middlewares/ValidateId.js';
+
+const router = express.Router();
 
 router.post(
     '/diary',

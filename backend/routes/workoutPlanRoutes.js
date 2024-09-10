@@ -1,6 +1,7 @@
 import express from 'express';
 import WorkoutPlan from '../models/workoutPlan.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
+import { query, body, validationResult } from 'express-validator';
 
 const router = express.Router();
 

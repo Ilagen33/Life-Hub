@@ -2,6 +2,7 @@ import express from 'express';
 import CalendarEvent from '../models/CalendarEvent.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import validateObjectId from '../middlewares/ValidateId.js';
+import { query, body, validationResult } from 'express-validator';
 
 const router = express.Router();
 

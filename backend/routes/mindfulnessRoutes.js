@@ -2,6 +2,7 @@ import express from 'express';
 import MindfulnessExercise from '../models/MindfulnessExercise.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 import CompletedMindfulness from '../models/CompletedMindfulness.js';
+import { query, body, validationResult } from 'express-validator';
 
 const router = express.Router();
 

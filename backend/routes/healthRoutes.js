@@ -1,6 +1,7 @@
 import express from "express";
 import HealthData from "../models/healthData.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
+import { query, body, validationResult } from 'express-validator';
 
 const router = express.Router();
 
@@ -156,7 +157,7 @@ router.post(
                 newHealthData,
                 message: "HealthData aggiunto con successo"
             });
-            
+
         } catch (error) {
             next(error);        
         }

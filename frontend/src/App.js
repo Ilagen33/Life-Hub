@@ -1,3 +1,4 @@
+//App.js
 import './App.css';
 import MyFooter from './Components/Footer.jsx';
 import React, { useEffect } from "react";

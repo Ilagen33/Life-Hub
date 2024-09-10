@@ -1,5 +1,6 @@
 import express from 'express';
 import cloudinaryUploader from '../config/cloudinaryConfig.js'; // Multer configurato per Cloudinary
+import { query, body, validationResult } from 'express-validator';
 
 const router = express.Router();
 

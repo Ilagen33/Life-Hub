@@ -2,6 +2,7 @@ import express from 'express';
 import Finance from '../models/Finance.js';
 import authMiddleware from '../middlewares/authMiddleware.js'; // Middleware di autenticazione
 import validateObjectId from '../middlewares/ValidateId.js';
+import { query, body, validationResult } from 'express-validator';
 
 const router = express.Router();
 

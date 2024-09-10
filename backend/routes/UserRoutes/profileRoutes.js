@@ -21,7 +21,7 @@ router.get(
     }
 )
 router.put(
-    '/me',
+    '/me/:id',
     [
         body("email")
             .optional()
@@ -58,7 +58,7 @@ router.put(
 )
 
 router.delete(
-    '/delete/:id',
+    '/me/:id',
     authMiddleware,
     deleteUser
 )

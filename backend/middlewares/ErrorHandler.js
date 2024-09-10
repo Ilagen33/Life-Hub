@@ -1,8 +1,17 @@
 // middlewares/errorHandler.js
+import winston from 'winston';
 
+const logger = winston.createLogger({
+    level: 'error',
+    format: winston.format.json(),
+    transports: [
+        new winston.transports.File({ filename: 'error.log' }),
+        new winston.transports.Console()
+    ]
+});
 const errorHandler = (err, req, res, next) => {
     // Log dell'errore per il debugging
-    console.error(err.stack);
+    logger.error(err.stack);
 
     // Determina il codice di stato dell'errore
     const statusCode = err.statusCode || err.status || 500;
@@ -23,6 +32,14 @@ const errorHandler = (err, req, res, next) => {
         return res.status(401).json({
             status: 'error',
             error: 'Errore di autenticazione',
+            message: message
+        });
+    }
+
+    if (err.status === 403) {
+        return res.status(403).json({
+            status: 'error',
+            error: 'Accesso negato',
             message: message
         });
     }

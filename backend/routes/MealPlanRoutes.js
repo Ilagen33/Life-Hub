@@ -1,6 +1,7 @@
 import express from 'express';
 import MealPlan from '../models/MealPlan.js';
 import authMiddleware from '../middlewares/authMiddleware.js'; // Middleware di autenticazione
+import { query, body, validationResult } from 'express-validator';
 
 const router = express.Router();
 

@@ -1,6 +1,7 @@
 import express from 'express';
 import Recipe from '../models/Recipe.js';
 import authMiddleware from '../middlewares/authMiddleware.js'; // Middleware di autenticazione
+import { query, body, validationResult } from 'express-validator';
 
 const router = express.Router();
 
