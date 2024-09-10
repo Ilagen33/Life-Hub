@@ -199,9 +199,11 @@ router.post(
     },
     authMiddleware,
     async (req, res, next) => {
-        const { title, category, content, cover, dueDate, status } = req.body;
         try {
-            const newTask = new Task({ title, category, content, cover, dueDate, status, user: req.user.id });
+            const newTask = new Task({
+                user: req.user.id,
+                ...req.body,
+            });
             const savedTask = await newTask.save();
 
             res
@@ -289,30 +291,32 @@ router.put(
         const update = req.body;
     
         try {
-        const updatedTask = await Task.findByIdAndUpdate(
-            {_id: id, user: req.user._id},
-            update,
-            { new: true, runValidators: true}
-        );
+            const updatedTask = await Task.findByIdAndUpdate(
+                {_id: id, user: req.user._id},
+                update,
+                { new: true, runValidators: true}
+            );
 
-        if(!updatedTask) {
-            return res
-                .status(404)
+            if(!updatedTask) {
+                return res
+                    .status(404)
+                    .json({
+                        message: "Task da aggiornare non presente o non trovato"
+                    });
+            };
+
+            res
                 .json({
-                    message: "Task da aggiornare non presente o non trovato"
+                    updatedTask,
+                    message: "Task Aggiornato!!"
                 });
-        };
 
-        res.json({
-            updatedTask,
-            message: "Task Aggiornato!!"
-        });
-
-    } catch (err) {
-        next(err);    
-    }
+        } catch (err) {
+            next(err);    
+        }
       
-  });
+    }
+);
 
 // Rotta per cancellare un'attività
 router.delete(
@@ -337,9 +341,11 @@ router.delete(
         await Task.findByIdAndDelete(req.params.id);
 
         res
+            .status(200)        
             .json({
                 message: "Task Eliminato!!"
             });
+            
         } catch (err) {
             next(err);
         }

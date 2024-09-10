@@ -1,3 +1,4 @@
+//dashNavbar.jsx
 import React, {useState} from "react";
 import LogoutButton from './LogoutButton.jsx'; // Assicurati di avere un componente Logout
 import logo from "../assets/lifehubfinal2.png";

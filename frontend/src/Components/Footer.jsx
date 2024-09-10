@@ -1,3 +1,4 @@
+//Footer.jsx
 import React from "react";
 import logo from "../assets/logofooterfull.png";
 

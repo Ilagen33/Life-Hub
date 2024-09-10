@@ -1,3 +1,4 @@
+//Register.jsx
 import React, { useState } from 'react';
 import { FaGoogle } from 'react-icons/fa';
 import logo from '../../assets/lifehubfinal2.png'; // Assicurati che il percorso dell'immagine sia corretto

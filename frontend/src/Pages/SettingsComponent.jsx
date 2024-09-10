@@ -1,3 +1,4 @@
+//SettingsComponent.jsx
 import React, { useState, useEffect, useContext } from 'react';
 import axiosInstance from '../utils/axiosInstance';
 import { AuthContext } from '../context/AuthContext';

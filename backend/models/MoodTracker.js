@@ -6,30 +6,37 @@ const MoodTrackerSchema = new Schema(
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            required: true
+            required: true,
         },
 
         mood: {
             type: String,
             required: true,
-            enum: ["happy", "sad", "angry", "neutral", "excited", "bored", "stressed", "anxious", "calm", "tired", "relaxed", "frustrated"]
+            enum: ["happy", "sad", "angry", "neutral", "excited", "bored", "stressed", "anxious", "calm", "tired", "relaxed", "frustrated"], // Add more moods as needed
+            default: "neutral",
+            trim: true,
         },
 
-        note: {
-            type: String,
+        intensity: {
+            type: Number,
+            required: true,
+            min: 1,
+            max: 10,
+            default: 5,
             trim: true,
-            maxlength: 1000,
         },
 
         date: {
             type: Date,
-            default: Date.now
+            default: Date.now,
+            trim: true,
         },
 
         note: {
             type: String,
-            trim: true,
             maxlength: 1000,
+            default: "",
+            trim: true,
         }
     },
     {

@@ -13,20 +13,46 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Configurazione dello storage Cloudinary
+// Configurazione dello storage Cloudinary con gestione delle cartelle
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    folder: "uploads", // Specifica la cartella di destinazione su Cloudinary
-    allowed_formats: ["jpg", "png", "jpeg", "gif"], // Limita i formati di file accettati
-    transformation: [{ width: 500, height: 500, crop: "limit" }], // Ridimensiona e limita la grandezza
+  params: async (req, file) => {
+    let folder = "uploads"; // Cartella di default
+
+    // Se il file è un'immagine
+    if (file.mimetype.startsWith("image/")) {
+      folder = "images"; // Cartella per immagini
+    }
+    
+    // Se il file è un documento (es. PDF, Word, Excel)
+    if (file.mimetype === "application/pdf" || file.mimetype === "application/msword" || file.mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || file.mimetype === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+      folder = "documents"; // Cartella per documenti
+    }
+
+    // Se il file è un video
+    if (file.mimetype.startsWith("video/")) {
+      folder = "videos"; // Cartella per video
+    }
+
+    let transformation = undefined;
+
+    // Applica una trasformazione solo alle immagini
+    if (file.mimetype.startsWith("image/")) {
+      transformation = [{ width: 500, height: 500, crop: "limit" }];
+    }
+
+    return {
+      folder: folder, // Assegna la cartella dinamicamente
+      allowed_formats: ["jpg", "png", "jpeg", "gif", "pdf", "doc", "docx", "xlsx", "mp4", "mov"], // Formati consentiti
+      transformation, // Solo per le immagini
+    };
   },
 });
 
 // Creazione dell'uploader Multer con lo storage Cloudinary configurato
 const cloudinaryUploader = multer({
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // Limite di 5MB
+  limits: { fileSize: 10 * 1024 * 1024 }, // Limite di 5MB
 });
 
 // Volendo, si poteva pure inserire un limite alla dimensione dei file caricabili, ad esempio:

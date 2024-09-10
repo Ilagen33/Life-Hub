@@ -13,6 +13,7 @@ const ActivitySchema = new Schema(
             type: String,
             required: true,
             trim: true,
+            maxlength: [100, "Il titolo non può superare i 100 caratteri"],
         },
 
         priority: {
@@ -24,12 +25,23 @@ const ActivitySchema = new Schema(
         date: {
             type: Date,
             default: Date.now,
+            validate: {
+                validator: function(v) {
+                    if (v == null) return true;
+                    return v > Date.now();
+                },
+                message: 'La data di scadenza deve essere una data futura.'
+            },
         },
 
         status: {
             type: String,
-            enum: ["pending", "completed"],
+            enum: {
+                values: ['pending', 'completed', 'in-progress'],
+                message: 'Lo stato deve essere uno dei seguenti valori: pending, completed, in-progress',
+            },
             default: "pending",
+            trim: true,
         },
 
         notes: {

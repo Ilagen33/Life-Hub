@@ -1,9 +1,33 @@
-const budgetSchema = new mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    category: { type: String, required: true },
-    limit: { type: Number, required: true }, // Limite di budget per la categoria
-    period: { type: String, enum: ['monthly', 'weekly'], default: 'monthly' },
-  });
+const budgetSchema = new mongoose.Schema(
+  {
+    user: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'User', 
+      required: true 
+    },
+
+    category: { 
+      type: String,
+      required: true,
+      default: 'general',
+      trim: true,
+      maxlength: [100, "Il titolo non può superare i 100 caratteri"],
+    },
+
+    limit: { 
+      type: Number, 
+      required: true,
+      trim: true,
+    },
+     // Limite di budget per la categoria
+    period: { 
+      type: String, 
+      enum: ['monthly', 'weekly'], 
+      default: 'monthly',
+      trim: true,
+    },
+  }
+);
   
   const Budget = mongoose.model('Budget', budgetSchema);
   

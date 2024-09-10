@@ -1,3 +1,4 @@
+//Navbar.jsx
 import React from "react";
 import logo from '../assets/lifehubfinal2.png';
 import login from '../assets/Login-button.png';

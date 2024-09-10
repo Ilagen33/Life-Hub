@@ -95,21 +95,35 @@ router.post(
 
 router.get(
     "/google",
-    passport.authenticate("google", { scope: ["profile", "email"] })
+    passport
+        .authenticate(
+            "google", 
+            { scope: 
+                [
+                    "profile",
+                     "email"
+                ] 
+            }
+        )
 );
 
 router.get(
     "/google/callback",
-    passport.authenticate("google", {failureRedirect: "/login"}),
+    passport
+        .authenticate(
+            "google",
+            {
+                failureRedirect: 
+                "/login"
+            }
+        ),
 
-    async(req, res) => {
+    async(req, res, next) => {
         try {
             const token = await generateJWT({id: req.user._id});
             res.redirect(`http://localhost:3000/login?token=${token}`);
         } catch (error) {
-            console.log("Errore nella generazione del token", error);
-            res
-                .redirect('/login?error=auth_failed')
+            next(error);
         }
     }
 );

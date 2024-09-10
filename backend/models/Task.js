@@ -56,12 +56,6 @@ const TaskSchema = new Schema(
             required: true,
             trim: true,
             maxlength: [2500, "Il contenuto non può superare i 2500 caratteri"],
-            validate: {
-                validator: function (v) {
-                  return v > Date.now();
-                },
-                message: 'La data di scadenza deve essere una data futura.',
-            },
         },
 
         priority: {

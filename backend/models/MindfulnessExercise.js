@@ -1,78 +1,114 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import mongoose from 'mongoose';
 
-const HealthForm = () => {
-  const [sleepHours, setSleepHours] = useState('');
-  const [caloriesConsumed, setCaloriesConsumed] = useState('');
-  const [weight, setWeight] = useState('');
-  const [healthStatus, setHealthStatus] = useState('Good');
+const mindfulnessExerciseSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    maxlength: [100, "Il titolo non può superare i 100 caratteri"],
+    unique: true,
+    trim: true,
+  },
+ 
+  tags: {
+    type: [String],
+    required: true,
+    enum: ['Meditazione', 'Respirazione', 'Visualizzazione', 'Altro', 'Tutti'],
+  },
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const data = {
-        sleepHours,
-        caloriesConsumed,
-        weight,
-        healthStatus,
-      };
-      await axios.post('/api/health/add', data);
-      alert('Dati di salute aggiunti con successo!');
-      setSleepHours('');
-      setCaloriesConsumed('');
-      setWeight('');
-      setHealthStatus('Good');
-    } catch (error) {
-      console.error('Errore durante l\'aggiunta dei dati di salute:', error);
-    }
-  };
+  category: {
+    type: String,
+    required: true,
+    enum: ['Meditazione', 'Respirazione', 'Visualizzazione', 'Altro', 'Tutti'],
+    default: 'Tutti',
+    trim: true,
+  },
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <h2>Inserisci i tuoi dati di salute</h2>
+  difficulty: {
+    type: String,
+    required: true,
+    enum: ['Facile', 'Medio', 'Difficile'],
+    default: 'Facile',
+    trim: true,
+  },
 
-      <div>
-        <label>Ore di sonno</label>
-        <input
-          type="number"
-          value={sleepHours}
-          onChange={(e) => setSleepHours(e.target.value)}
-          required
-        />
-      </div>
+  imageURL: {
+    type: String,
+    required: true,
+    trim: true,
+    default: 'https://images.pexels.com/photos/3760140/pexels-photo-3760140.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    validate: {
+      validator: function (v) {
+          if (v == null) return true;
+          return validator.isURL(v);
+      },
+      message: props => `${props.value} non è un URL valido!`
+    },
+  },
 
-      <div>
-        <label>Calorie consumate</label>
-        <input
-          type="number"
-          value={caloriesConsumed}
-          onChange={(e) => setCaloriesConsumed(e.target.value)}
-          required
-        />
-      </div>
+  audioURL: {
+    type: String,
+    required: true,
+    trim: true,
+    default: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    validate: {
+      validator: function (v) {
+          if (v == null) return true;
+          return validator.isURL(v);
+      },
+      message: props => `${props.value} non è un URL valido!`
+    },
+  },
 
-      <div>
-        <label>Peso (kg)</label>
-        <input
-          type="number"
-          value={weight}
-          onChange={(e) => setWeight(e.target.value)}
-          required
-        />
-      </div>
+  // Altre proprietà dell'esercizio di mindfulness
+  instructions: {
+    type: String,
+    required: true,
+    trim: true,
+    default: 'Segui le istruzioni fornite nell\'esercizio.',
+  },
 
-      <div>
-        <label>Stato di salute</label>
-        <select value={healthStatus} onChange={(e) => setHealthStatus(e.target.value)}>
-          <option value="Good">Buono</option>
-          <option value="Moderate">Moderato</option>
-          <option value="Bad">Cattivo</option>
-        </select>
-      </div>
+  description: {
+    type: String,
+    required: true,
+    trim: true,
+    default: 'Questo è un esercizio di mindfulness.',
+    maxlength: [2000, "La descrizione non può superare i 500 caratteri"],
+    minlength: [10, "La descrizione deve contenere almeno 10 caratteri"],
+  },
 
-      <button type="submit">Salva</button>
-    </form>
-  );
-};
+  duration: {
+    type: Number, // Durata in minuti
+    required: true,
+    min: 1,
+    max: 60,
+    default: 10,
+    trim: true,
+    validate: {
+      validator: function (v) {
+          if (v == null) return true;
+          return validator.isNumeric(v.toString());
+      },
+      message: props => `${props.value} non è un numero valido!`
+  
+    },
+  },
+  
+  mediaURL: {
+    type: String, // URL del file video o audio dell'esercizio
+    required: true,
+    trim: true,
+    validate: {
+      validator: function (v) {
+          if (v == null) return true;
+          return validator.isURL(v);
+      },
+      message: props => `${props.value} non è un URL valido!`
+  
+    },
+  },
+  
+});
 
-export default HealthForm;
+const MindfulnessExercise = mongoose.model('MindfulnessExercise', mindfulnessExerciseSchema);
+
+export default MindfulnessExercise;
