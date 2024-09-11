@@ -17,16 +17,16 @@ const api = axios.create({
 const registerUser = async (userData) => {
     try{
         
-        const response = await api.post("/register", userData, {
-        });
+        const response = await api.post("/register", userData);
+
         console.log("Registrazione avvenuta con successo:", response.data);
         return response.data;
 
     }   catch (error) {
 
         if(error.response) {
-            console.error("Errore nella registrazione:", error.response.data);
-            throw new Error(error.response.data.message || "Errore durante la registrazione. Riprova.");
+            console.error("Errore nella registrazione:", error.response);
+            throw new Error(error.response.data || "Errore durante la registrazione. Riprova.");
         
         } else if(error.request) {
             console.error("Errore durante nella richiesta :", error.request);
@@ -68,7 +68,10 @@ const [error, setError] = useState('');
       return;
     }
     try {
-        await registerUser(formData);
+        const data = await registerUser(formData);
+        console.log('Dati ricevuti dopo la registrazione:', data);
+
+        localStorage.setItem('token', data.accessToken); // Salva il token se presente
         alert('Registrazione avvenuta con successo');
         navigate("/login")
     } catch (error) {

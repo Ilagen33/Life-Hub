@@ -1,6 +1,6 @@
 //Promemoria.jsx
 import React, { useState } from 'react';
-import axios from '../axiosInstance';
+import axios from '../../utils/axiosInstance.js';
 
 const ReminderForm = () => {
   const [email, setEmail] = useState('');

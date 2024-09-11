@@ -1,11 +1,13 @@
+//userController.js
 import jwt from 'jsonwebtoken';
 import User from "../models/User.js"; // Assicurati di avere il modello User
 import dotenv from 'dotenv';
+import sendWelcomeEmail from '../services/emailService.js';
 dotenv.config();
 
 // Genera refresh token
 const generateRefreshToken = (userId) => {
-    return jwt.sign({ _id: userId }, process.env.JWT_REFRESH_SECRET, {
+    return jwt.sign({ _id: userId }, process.env.REFRESH_TOKEN_SECRET, {
         expiresIn: '7d' // 7 giorni di validità per il refresh token
     });
 };
@@ -27,26 +29,81 @@ export const registerUser = async (req, res, next) => {
 
         const newUser = new User({nome, cognome, email, dataNascita, username, password});
         await newUser.save();
+        const htmlContent = 
+        `
+            <!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benvenuto a LifeHub</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif;">
+    <table align="center" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-collapse: collapse;">
+        <!-- Header -->
+        <tr>
+            <td align="center" style="background-color: #4CAF50; padding: 20px;">
+                <h1 style="color: #ffffff; font-size: 24px; margin: 0;">Benvenuto a LifeHub!</h1>
+            </td>
+        </tr>
+        
+        <!-- Body -->
+        <tr>
+            <td align="center" style="padding: 20px;">
+                <p style="font-size: 16px; color: #333333; margin: 0;">Ciao <strong>{{username}}</strong>,</p>
+                <p style="font-size: 16px; color: #333333; line-height: 1.6; margin-top: 20px;">
+                    Grazie per esserti unito a <strong>LifeHub</strong>! Siamo entusiasti di averti con noi.
+                </p>
+                <p style="font-size: 16px; color: #333333; line-height: 1.6;">
+                    Puoi iniziare a esplorare la piattaforma e organizzare la tua vita in modo semplice e intuitivo.
+                </p>
+                <p style="font-size: 16px; color: #333333; line-height: 1.6;">
+                    Se hai bisogno di assistenza, sentiti libero di rispondere a questa email.
+                </p>
+            </td>
+        </tr>
+        
+        <!-- Button -->
+        <tr>
+            <td align="center" style="padding: 20px;">
+                <a href="http://localhost:3000" style="background-color: #4CAF50; color: #ffffff; padding: 15px 30px; text-decoration: none; font-size: 16px; border-radius: 5px;">
+                    Inizia ad esplorare LifeHub
+                </a>
+            </td>
+        </tr>
+        
+        <!-- Footer -->
+        <tr>
+            <td align="center" style="padding: 20px; background-color: #f4f4f4;">
+                <p style="font-size: 12px; color: #888888; margin: 0;">&copy; 2024 LifeHub. Tutti i diritti riservati.</p>
+                <p style="font-size: 12px; color: #888888; margin: 0;">Questa è un'email automatica, per favore non rispondere.</p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
 
-        const accessToken = newUser.generateAuthToken(); // Access token
-        const refreshToken = generateRefreshToken(newUser._id); // Refresh token
+        `;
+        
+        await sendWelcomeEmail(newUser.email, "Benvenuto su Life Hub", htmlContent);
+        console.log(`Email di benvenuto inviata a ${newUser.email}`);
+        
+        const accessToken = newUser.generateAuthToken(); // Genera il token di accesso
 
         res
             .status(201)
             .json({
-                accessToken,
-                refreshToken, 
+                accessToken, 
                 message:"Utente registrato con successo", 
                 success: true
             });
-    
         } catch (err) {
         next(err);
     }
 };
 
 export const loginUser = async (req, res, next) => {
-
+    const {email, password} = req.body;
     try {
         
         const user = await User.findOne({email});

@@ -1,3 +1,4 @@
+//server.js
 import express from 'express';
 import endpoints from 'express-list-endpoints';
 import mongoose from 'mongoose';
@@ -108,14 +109,22 @@ mongoose.connect(process.env.DB_URI)
     .then(() => console.log("DB connesso"))
     .catch((err) => console.error("DB: errore nella connessione", err));   
 
-app.use(errorHandler);
-app.use(authMiddleware);
+
 
 // Usa morgan per loggare tutte le richieste
 app.use(morgan('dev'));
 
-app.use("/api", taskRoutes);            //1
-app.use("/api", userRoutes);            //2
+// Gestione degli errori
+app.use(errorHandler);
+
+// Rotte senza autenticazione (login, registrazione)
+app.use("/api", userRoutes);  // Rotte per login e registrazione
+
+// Middleware per proteggere le rotte
+app.use(authMiddleware);
+
+// Rotte protette (richiedono autenticazione)
+app.use("/api", taskRoutes);            //2
 app.use("/api", profileRoutes);         //3
 app.use("/api", diaryRoutes);           //4
 app.use("/api", activityRoutes);        //5
@@ -129,6 +138,7 @@ app.use('/api', recipeRoutes);          //12
 app.use('/api', noteRoutes);            //13
 app.use('/api', preferencesRoutes);     //14
 app.use('/api', documentRoutes);        //15
+
 
 app.listen(PORT, () => {
     console.log(`Server attivo sulla porta ${PORT}. Sono disponibili i seguenti endpoints:`);

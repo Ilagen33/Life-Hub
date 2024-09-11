@@ -11,6 +11,10 @@ const UpdateProfile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const api = axios.create({
+            baseURL: 'http://localhost:5000/api',
+        });
+
         try {
             const updateData = { name, email };
 
@@ -20,7 +24,7 @@ const UpdateProfile = () => {
                 updateData.password = newPassword;    // Passa la nuova password
             }
 
-            const response = await axios.put('/api/users/me', updateData);
+            const response = await api.put(`/me/${user._id}`, updateData);
             setUser(response.data.user); // Aggiorna l'utente nel contesto
             alert('Profilo aggiornato con successo!');
         } catch (err) {

@@ -1,12 +1,12 @@
 import express from "express";
 import User from "../../models/User.js";
 
-const router = express.Router();
 import {validationResult} from 'express-validator/lib/validation-result.js';
 import {body} from "express-validator";
 import authMiddleware from "../../middlewares/authMiddleware.js";
-import { deleteUser, updateUser } from "../../controllers/userController.js";
+import { deleteUser, updateUser, refreshAccessToken } from "../../controllers/userController.js";
 
+const router = express.Router();
 
 router.get(
     '/me', 
@@ -61,6 +61,9 @@ router.delete(
     '/me/:id',
     authMiddleware,
     deleteUser
-)
+);
+
+router.post('/refresh-token', refreshAccessToken);
+
 
 export default router;

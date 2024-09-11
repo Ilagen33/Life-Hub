@@ -1,11 +1,8 @@
-import firebase from "firebase/app";
-import "firebase/auth"; // Se usi Firebase Authentication
-import "firebase/firestore"; // Se usi Firebase Firestore (database)
-
-// Importa i moduli individuali di Firebase
+// Importa i moduli necessari da Firebase
 import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics";
-import { getMessaging } from "firebase/messaging";
+import { getAuth } from "firebase/auth";  // Per Firebase Authentication
+import { getFirestore } from "firebase/firestore";  // Per Firebase Firestore
+import { getMessaging } from "firebase/messaging";  // Per Firebase Cloud Messaging
 
 // Configurazione Firebase
 const firebaseConfig = {
@@ -21,16 +18,9 @@ const firebaseConfig = {
 // Inizializza l'app Firebase
 const app = initializeApp(firebaseConfig);
 
-// Ottieni l'istanza di Analytics
-// const analytics = getAnalytics(app);
+// Ottieni i servizi Firebase
+const db = getFirestore(app);         // Firebase Firestore
+const messaging = getMessaging(app);  // Firebase Messaging
 
-// Ottieni l'istanza di Firebase Messaging
-const messaging = getMessaging(app);
-
-// Esporta i servizi Firebase che utilizzerai (esempio: auth, firestore)
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-export { auth, db };
-
-export { messaging };
+// Esporta i servizi Firebase che utilizzerai
+export { db, messaging };

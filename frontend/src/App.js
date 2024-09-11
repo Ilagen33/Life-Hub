@@ -12,8 +12,8 @@ import Register from './Pages/landingPage/Register.jsx';
 import Dashboard from './Pages/dashboard/Dashboard.jsx';
 import {AuthProvider} from './context/AuthContext.js';
 import PrivateRoute from './Components/PrivateRoute.js';
-import { messaging } from './services/firebase'; // Assicurati che il percorso di importazione sia corretto
-
+import { messaging } from './service/firebase.js'; // Assicurati che il percorso di importazione sia corretto
+ 
 function App() {
   useEffect(() => {
     // Funzione per richiedere il permesso per le notifiche push

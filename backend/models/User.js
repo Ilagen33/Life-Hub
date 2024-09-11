@@ -1,3 +1,4 @@
+//User.js
 import { Schema, model } from "mongoose";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -53,7 +54,17 @@ const userSchema = new Schema(
 
         googleId: {
             type: String,
-        }
+        },
+
+        isLocked: {
+            type: Boolean,
+            default: false,
+        },
+
+        lockUntil: {
+            type: Date,
+        },
+          
     },
     {
         collection: "users",
@@ -62,10 +73,14 @@ const userSchema = new Schema(
 );
 
 userSchema.pre('save', async function(next) {
-    if (!this.isModified('password')) return next();
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
+    try {
+        if (!this.isModified('password')) return next();
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+        next();
+      } catch (error) {
+        next(error); // Propaga l'errore
+      }
 });
 
 // Confronta la password inserita con quella criptata
@@ -76,10 +91,19 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
 
 // Genera un token JWT per l'utente
 userSchema.methods.generateAuthToken = function() {
-    // Genera e ritorna direttamente il token senza assegnarlo a una variabile 'token'
+    if (!process.env.JWT_SECRET) {
+        throw new Error('JWT_SECRET non è definito');
+    }
+        // Genera e ritorna direttamente il token senza assegnarlo a una variabile 'token'
+
     return jwt.sign({ _id: this._id.toString() }, process.env.JWT_SECRET, { expiresIn: '7d' });
 };
 
+userSchema.methods.resetLoginAttempts = async function () {
+    this.loginAttempts = 0;
+    this.isLocked = false;
+    await this.save();
+};
 
 const User = model("User", userSchema);
 
