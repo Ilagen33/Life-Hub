@@ -1,25 +1,38 @@
 //Exercise.jsx
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance.js';
+import { useAuth } from '../context/AuthContext'; // Assumi di avere un contesto di autenticazione
 
 const WorkoutList = () => {
+  const { authToken } = useAuth(); // Ottieni il token di autenticazione dal contesto
+
   const [workouts, setWorkouts] = useState([]);
 
   useEffect(() => {
     const fetchWorkouts = async () => {
       try {
-        const response = await axios.get('/api/workouts');
+        const response = await axiosInstance.get('/WorkoutPlan', {
+          headers: {
+            Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+          },
+        });
         setWorkouts(response.data);
       } catch (error) {
         console.error('Errore durante il recupero dei piani di allenamento:', error);
       }
     };
-    fetchWorkouts();
-  }, []);
+    if(authToken) {
+      fetchWorkouts();
+    }
+  }, [authToken]);
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/workouts/delete/${id}`);
+      await axiosInstance.delete(`/WorkoutPlan/${id}`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+        },
+      });
       setWorkouts(workouts.filter(workout => workout._id !== id));
     } catch (error) {
       console.error('Errore durante la cancellazione del piano di allenamento:', error);

@@ -1,8 +1,11 @@
 //DocumentManager.jsx
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
+import { useAuth } from '../context/AuthContext'; // Assumi di avere un contesto di autenticazione
 
 const DocumentManager = () => {
+  const { authToken } = useAuth(); // Ottieni il token di autenticazione dal contesto
+
   const [file, setFile] = useState(null);
   const [documents, setDocuments] = useState([]);
 
@@ -13,8 +16,12 @@ const DocumentManager = () => {
     formData.append('document', file);
 
     try {
-      const response = await axios.post('/api/documents/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const response = await axiosInstance.post('/api/upload', formData, {
+        headers: { 
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+
+         },
       });
       alert('Documento caricato con successo!');
       fetchDocuments();
@@ -26,7 +33,11 @@ const DocumentManager = () => {
   // Recupera la lista dei documenti caricati
   const fetchDocuments = async () => {
     try {
-      const response = await axios.get('/api/documents/list');
+      const response = await axiosInstance.get('/list', {
+        headers: {
+          Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+        },
+      });
       setDocuments(response.data);
     } catch (error) {
       console.error('Errore durante il recupero dei documenti:', error);
@@ -34,8 +45,10 @@ const DocumentManager = () => {
   };
 
   useEffect(() => {
+    if(authToken) {
     fetchDocuments();
-  }, []);
+    }
+  }, [authToken]);
 
   return (
     <div>

@@ -1,26 +1,38 @@
 //NoteList.jsx
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance.js';
+import { useAuth } from '../context/AuthContext'; // Assumi di avere un contesto di autenticazione
 
 const NoteList = () => {
+  const { authToken } = useAuth(); // Ottieni il token di autenticazione dal contesto
+
   const [notes, setNotes] = useState([]);
 
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const response = await axios.get('/api/notes');
+        const response = await axiosInstance.get('/Notes', {
+          headers: {
+            Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+          } 
+        });
         setNotes(response.data);
       } catch (error) {
         console.error('Errore durante il recupero degli appunti:', error);
       }
     };
-
-    fetchNotes();
-  }, []);
+    if(authToken) {
+      fetchNotes();
+    }
+  }, [authToken]);
 
   const deleteNote = async (noteId) => {
     try {
-      await axios.delete(`/api/notes/delete/${noteId}`);
+      await axiosInstance.delete(`/api/Notes/${noteId}`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+        },
+      });
       setNotes((prevNotes) => prevNotes.filter((note) => note._id !== noteId));
     } catch (error) {
       console.error('Errore durante l\'eliminazione dell\'appunto:', error);

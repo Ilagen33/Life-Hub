@@ -55,11 +55,6 @@ const cloudinaryUploader = multer({
   limits: { fileSize: 10 * 1024 * 1024 }, // Limite di 5MB
 });
 
-// Volendo, si poteva pure inserire un limite alla dimensione dei file caricabili, ad esempio:
-// const cloudinaryUploader = multer({
-//     storage: storage,
-//     limits: { fileSize: 5 * 1024 * 1024 } // Limite di 5MB
-// });
 // Route per il caricamento del file su Cloudinary
 router.post('/upload', cloudinaryUploader.single('media'), (req, res) => {
     // Restituisci l'URL del file caricato (Cloudinary restituisce il link nel path)

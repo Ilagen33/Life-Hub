@@ -12,7 +12,7 @@ router.post(
         body("week")
             .notEmpty()
             .withMessage("La settimana è obbligatoria.")
-            .isNumber()
+            .isNumeric()
             .withMessage("La settimana deve essere un numero.")
             .custom((value) => {
                 const weekNumber = parseInt(value);
@@ -22,7 +22,7 @@ router.post(
         body("year")
             .notEmpty()
             .withMessage("L'anno è obbligatorio.")
-            .isNumber()
+            .isNumeric()
             .withMessage("L'anno deve essere un numero.")
             .custom((value) => {
                 const yearNumber = parseInt(value);
@@ -56,13 +56,13 @@ router.post(
             res.status(201).json(savedMealPlan);
         } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Errore durante la pianificazione dei pasti.' });
-        }
+          next(error);
+      }
     }
 );   
   
   // Rotta per ottenere il piano settimanale dei pasti
-  router.get('/MealPlan', authMiddleware, async (req, res) => {
+  router.get('/MealPlan', authMiddleware, async (req, res, next) => {
     const { week, year } = req.params;
   
     try {
@@ -74,7 +74,7 @@ router.post(
       }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Errore durante il recupero del piano settimanale dei pasti.' });
+      next(error);
     }
   });
 

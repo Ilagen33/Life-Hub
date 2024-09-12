@@ -1,9 +1,12 @@
 //Preferences.jsx
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance.js';
 import Widget from './Widget'; // Componente per i widget personalizzati
+import { useAuth } from '../../context/AuthContext.js' // Assumi di avere un contesto di autenticazione
 
 const Preference = () => {
+  const { authToken } = useAuth(); // Ottieni il token di autenticazione dal contesto
+
   const [preferences, setPreferences] = useState(null);
   const [layout, setLayout] = useState('default');
   const [widgets, setWidgets] = useState([]);
@@ -11,7 +14,11 @@ const Preference = () => {
   useEffect(() => {
     const fetchPreferences = async () => {
       try {
-        const response = await axios.get('/api');
+        const response = await axiosInstance.get('/Preferences', {
+          headers: {
+            Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+          },
+        });
         setPreferences(response.data);
         setLayout(response.data.dashboardLayout);
         setWidgets(response.data.widgets);
@@ -19,9 +26,10 @@ const Preference = () => {
         console.error('Errore durante il recupero delle preferenze:', error);
       }
     };
-
-    fetchPreferences();
-  }, []);
+    if(authToken){
+      fetchPreferences();
+    }
+  }, [authToken]);
 
   return (
     <div className={`dashboard ${layout}`}>

@@ -1,8 +1,11 @@
 //PreferencesForm.jsx
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
+import { useAuth } from '../context/AuthContext'; // Assumi di avere un contesto di autenticazione
 
 const PreferencesForm = () => {
+  const { authToken } = useAuth(); // Ottieni il token di autenticazione dal contesto
+
   const [layout, setLayout] = useState('default');
   const [widgets, setWidgets] = useState([]);
   const [integrations, setIntegrations] = useState({
@@ -11,26 +14,42 @@ const PreferencesForm = () => {
     calendar: false,
   });
 
+  const [preferencesId, setPreferencesId] = useState(null); // Stato per memorizzare l'ID delle preferenze
+
+
   useEffect(() => {
     const fetchPreferences = async () => {
       try {
-        const response = await axios.get('/api/preferences');
+        const response = await axiosInstance.get('/Preferences', {
+          headers: {
+            Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+          },
+        });
         setLayout(response.data.dashboardLayout);
         setWidgets(response.data.widgets);
         setIntegrations(response.data.integrations);
+        setPreferencesId(response.data._id); // Memorizza l'ID delle preferenze
       } catch (error) {
         console.error('Errore durante il recupero delle preferenze:', error);
       }
     };
-
-    fetchPreferences();
-  }, []);
+    if(authToken) {
+      fetchPreferences();
+    }
+  }, [authToken]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put('/api/preferences', { dashboardLayout: layout, widgets, integrations });
-      alert('Preferenze aggiornate con successo!');
+      await axiosInstance.put(
+        `/Preferences/${preferencesId}`, 
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+          },
+        },
+        { dashboardLayout: layout, widgets, integrations });
+        alert('Preferenze aggiornate con successo!');
     } catch (error) {
       console.error('Errore durante l\'aggiornamento delle preferenze:', error);
     }

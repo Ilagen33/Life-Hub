@@ -1,6 +1,6 @@
 //HealthForm.jsx
 import React, { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance.js';
 
 const HealthForm = () => {
   const [sleepHours, setSleepHours] = useState('');
@@ -17,7 +17,7 @@ const HealthForm = () => {
         weight,
         healthStatus,
       };
-      await axios.post('/api/health/add', data);
+      await axiosInstance.post('/HealthData', data);
       alert('Dati di salute aggiunti con successo!');
       setSleepHours('');
       setCaloriesConsumed('');

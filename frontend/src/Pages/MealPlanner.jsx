@@ -1,19 +1,27 @@
 //MealPlanner.jsx
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance.js';
+import { useAuth } from '../context/AuthContext'; // Assumi di avere un contesto di autenticazione
 
 const MealPlanner = () => {
+  const { authToken } = useAuth(); // Ottieni il token di autenticazione dal contesto
+
   const [recipes, setRecipes] = useState([]);
   const [mealPlan, setMealPlan] = useState({});
 
   useEffect(() => {
     const fetchRecipes = async () => {
-      const response = await axios.get('/api/recipes');
+      const response = await axiosInstance.get('/Recipe', {
+        headers: {
+          Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+        },
+      });
       setRecipes(response.data);
     };
-
+    if(authToken) {
     fetchRecipes();
-  }, []);
+    }
+  }, [authToken]);
 
   const handleSelectRecipe = (day, category, recipeId) => {
     setMealPlan((prevPlan) => ({
@@ -37,7 +45,12 @@ const MealPlanner = () => {
         }))
       ));
 
-      await axios.post('/api/recipes/meal-plan', { week, year, meals });
+      await axiosInstance.post('/MealPlan', {
+        headers: {
+          Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+        },
+      },
+       { week, year, meals });
       alert('Piano settimanale dei pasti salvato con successo!');
     } catch (error) {
       console.error('Errore durante il salvataggio del piano settimanale dei pasti:', error);

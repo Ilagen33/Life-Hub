@@ -1,8 +1,11 @@
 //DiaryPage.jsx
 import React, { useState, useEffect } from 'react';
 import axios from '../utils/axiosInstance.js'; // Assicurati che axiosInstance punti al tuo backend
+import { useAuth } from '../context/AuthContext'; // Assumi di avere un contesto di autenticazione
 
 const DiaryPage = () => {
+  const { authToken } = useAuth(); // Ottieni il token di autenticazione dal contesto
+
   // Stato per la gestione dei nuovi post e delle voci di diario esistenti
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -14,14 +17,20 @@ const DiaryPage = () => {
   useEffect(() => {
     const fetchDiaryEntries = async () => {
       try {
-        const res = await axios.get('/diary'); // Rotta per ottenere le voci di diario dal backend
+        const res = await axios.get('/diary', {
+          headers: {
+            Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+          },
+        }); // Rotta per ottenere le voci di diario dal backend
         setDiaryEntries(res.data);
       } catch (err) {
         console.error('Errore nel caricamento delle voci di diario:', err);
       }
     };
-    fetchDiaryEntries();
-  }, []);
+    if(authToken){
+      fetchDiaryEntries();
+    }
+  }, [authToken]);
 
   // Funzione per gestire il caricamento del file
   const handleFileChange = (e) => {
@@ -39,7 +48,11 @@ const [currentPage, setCurrentPage] = useState(1);
 
 const handlePageChange = async (pageNumber) => {
   try {
-    const res = await axios.get(`/diary?page=${pageNumber}`);
+    const res = await axios.get(`/diary?page=${pageNumber}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+      },
+    });
     setDiaryEntries(res.data);
     setCurrentPage(pageNumber);
   } catch (err) {
@@ -61,10 +74,17 @@ const handleSubmit = async (e) => {
   try {
     const res = currentEntryId
       ? await axios.put(`/diary/${currentEntryId}`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
+          headers: { 
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+
+           },
         })
       : await axios.post('/diary', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
+          headers: { 
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+          },
         });
 
     // Aggiorna l'elenco delle voci
@@ -88,7 +108,11 @@ const handleSubmit = async (e) => {
   // Funzione per eliminare una voce di diario
 const handleDelete = async (id) => {
   try {
-    await axios.delete(`/diary/${id}`);
+    await axios.delete(`/diary/${id}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+      },
+    });
     setDiaryEntries(diaryEntries.filter((entry) => entry._id !== id)); // Rimuovi la voce eliminata
     alert('Voce di diario eliminata con successo');
   } catch (err) {

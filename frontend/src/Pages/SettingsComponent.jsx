@@ -1,11 +1,11 @@
 //SettingsComponent.jsx
 import React, { useState, useEffect, useContext } from 'react';
 import axiosInstance from '../utils/axiosInstance';
-import { AuthContext } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 
 const SettingsComponent = () => {
-    const { user, setUser } = useContext(AuthContext);
+    const { user, setUser } = useAuth();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
 

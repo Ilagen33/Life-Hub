@@ -1,21 +1,28 @@
 //FinanceManager.jsx
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance.js';
+import { useAuth } from '../context/AuthContext'; // Assumi di avere un contesto di autenticazione
 
 const FinanceManager = () => {
+  const { authToken } = useAuth(); // Ottieni il token di autenticazione dal contesto
+
   const [transactions, setTransactions] = useState([]);
   const [newTransaction, setNewTransaction] = useState({
     type: 'expense',
     amount: '',
     category: 'food',
-    date: new Date().toISOString().slice(0, 10),
+    date: new Date(),
     note: '',
   });
 
   // Funzione per caricare le transazioni
   const fetchTransactions = async () => {
     try {
-      const response = await axios.get('/api/finance');
+      const response = await axiosInstance.get('/finance', {
+        headers: {
+          Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+        },
+      });
       setTransactions(response.data);
     } catch (error) {
       console.error('Errore durante il recupero delle transazioni:', error);
@@ -26,7 +33,11 @@ const FinanceManager = () => {
   const addTransaction = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/api/finance', newTransaction);
+      await axiosInstance.post('/api/finance', newTransaction, {
+        headers: {
+          Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+        },
+      });
       fetchTransactions(); // Aggiorna la lista delle transazioni
       setNewTransaction({ type: 'expense', amount: '', category: 'food', date: '', note: '' });
     } catch (error) {
@@ -37,7 +48,11 @@ const FinanceManager = () => {
   // Funzione per cancellare una transazione
   const deleteTransaction = async (id) => {
     try {
-      await axios.delete(`/api/finance/${id}`);
+      await axiosInstance.delete(`/api/finance/${id}`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+        },
+      });
       fetchTransactions(); // Aggiorna la lista delle transazioni
     } catch (error) {
       console.error('Errore durante la cancellazione della transazione:', error);
@@ -45,8 +60,10 @@ const FinanceManager = () => {
   };
 
   useEffect(() => {
-    fetchTransactions();
-  }, []);
+    if (authToken) {
+      fetchTransactions(); // Recupera le transazioni solo se il token è disponibile
+    }
+  }, [authToken]);
 
   return (
     <div>

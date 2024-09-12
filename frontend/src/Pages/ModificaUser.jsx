@@ -1,13 +1,21 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-import { AuthContext } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.js';
 
 const UpdateProfile = () => {
-    const { user, setUser } = useContext(AuthContext);
-    const [name, setName] = useState(user.name);
-    const [email, setEmail] = useState(user.email);
+    const { user, setUser } = useAuth();
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
     const [oldPassword, setOldPassword] = useState('');  // Campo per la vecchia password
     const [newPassword, setNewPassword] = useState('');  // Campo per la nuova password
+
+    // Utilizza useEffect per inizializzare i valori del form solo quando l'utente è disponibile
+    useEffect(() => {
+        if (user) {
+            setName(user.name || '');
+            setEmail(user.email || '');
+        }
+    }, [user]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -32,6 +40,10 @@ const UpdateProfile = () => {
             alert('Errore durante l\'aggiornamento del profilo');
         }
     };
+
+    if (!user) {
+        return <p>Caricamento del profilo in corso...</p>; // Mostra un messaggio finché `user` non è disponibile
+    }
 
     return (
         <form onSubmit={handleSubmit}>

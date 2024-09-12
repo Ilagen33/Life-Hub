@@ -30,6 +30,7 @@ import morgan from 'morgan';
 import cron from 'node-cron';
 import sendReminderEmail from './services/emailService.js'; // Funzione di invio email
 import User from './models/User.js'; // Modello utente
+import MealPlanRoutes from './routes/MealPlanRoutes.js'; // Modello piano settimanale dei pasti
 
 dotenv.config();
 
@@ -112,7 +113,7 @@ mongoose.connect(process.env.DB_URI)
 
 
 // Usa morgan per loggare tutte le richieste
-app.use(morgan('dev'));
+app.use(morgan('combined'));
 
 // Gestione degli errori
 app.use(errorHandler);
@@ -138,6 +139,7 @@ app.use('/api', recipeRoutes);          //12
 app.use('/api', noteRoutes);            //13
 app.use('/api', preferencesRoutes);     //14
 app.use('/api', documentRoutes);        //15
+app.use('/api', MealPlanRoutes);       //16 
 
 
 app.listen(PORT, () => {

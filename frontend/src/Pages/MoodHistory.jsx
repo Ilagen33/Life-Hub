@@ -1,22 +1,30 @@
 //MoodHistory.jsx
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance.js';
+import { useAuth } from '../context/AuthContext'; // Assumi di avere un contesto di autenticazione
 
 const MoodHistory = () => {
+  const { authToken } = useAuth(); // Ottieni il token di autenticazione dal contesto
+
   const [moodHistory, setMoodHistory] = useState([]);
 
   useEffect(() => {
     const fetchMoodHistory = async () => {
       try {
-        const response = await axios.get('/api/moods');
+        const response = await axiosInstance.get('/MoodTracker', {
+            headers: {
+              Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+            },
+        });
         setMoodHistory(response.data);
       } catch (error) {
         console.error('Errore durante il recupero dello storico degli umori:', error);
       }
     };
-
+    if (authToken) {
     fetchMoodHistory();
-  }, []);
+    }
+  }, [authToken]);
 
   return (
     <div>

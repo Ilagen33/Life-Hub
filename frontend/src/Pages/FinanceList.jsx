@@ -1,22 +1,31 @@
 //FinanceList.jsx
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance.js';
 import { Line } from 'react-chartjs-2'; // O Recharts, se preferisci
+import { useAuth } from '../context/AuthContext'; // Assumi di avere un contesto di autenticazione
 
 const FinanceList = () => {
+  const { authToken } = useAuth(); // Ottieni il token di autenticazione dal contesto
+
   const [finances, setFinances] = useState([]);
 
   useEffect(() => {
     const fetchFinances = async () => {
       try {
-        const res = await axios.get('/api/finances');
+        const res = await axiosInstance.get('/finance', {
+          headers: {
+            Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+          },
+        });
         setFinances(res.data);
       } catch (err) {
         console.error('Errore:', err);
       }
     };
+    if(authToken) {
     fetchFinances();
-  }, []);
+    }
+  }, [authToken]);
 
   const data = {
     labels: finances.map(f => f.category),

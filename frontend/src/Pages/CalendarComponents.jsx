@@ -1,9 +1,12 @@
 //CalendarComponent.jsx
 import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance.js';
+import { useAuth } from '../context/AuthContext'; // Assumi di avere un contesto di autenticazione
 
-const CalendarComponent = () => {
+const CalendarComponents = () => {
+  const { authToken } = useAuth(); // Ottieni il token di autenticazione dal contesto
+
   const [events, setEvents] = useState([]);
   const [date, setDate] = useState(new Date());
   const [selectedDateEvents, setSelectedDateEvents] = useState([]);
@@ -11,15 +14,20 @@ const CalendarComponent = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get('/api/calendar');
+        const response = await axiosInstance.get('/calendar', {
+          headers: {
+            Authorization: `Bearer ${authToken}`, // Invia il token nell'intestazione
+          },
+        });
         setEvents(response.data);
       } catch (error) {
         console.error('Errore durante il recupero degli eventi:', error);
       }
     };
-
+    if(authToken){
     fetchEvents();
-  }, []);
+    }
+  }, [authToken]);
 
   const handleDateChange = (selectedDate) => {
     setDate(selectedDate);
@@ -55,4 +63,4 @@ const CalendarComponent = () => {
   );
 };
 
-export default CalendarComponent;
+export default CalendarComponents;
