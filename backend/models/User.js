@@ -64,6 +64,10 @@ const userSchema = new Schema(
         lockUntil: {
             type: Date,
         },
+
+        avatar: {
+            type: String,
+        },
           
     },
     {

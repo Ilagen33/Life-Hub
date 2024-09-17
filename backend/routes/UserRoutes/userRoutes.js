@@ -5,6 +5,9 @@ import { loginUser, registerUser } from "../../controllers/userController.js";
 import rateLimit from 'express-rate-limit';
 import passport from "../../config/passportConfig.js";
 const router = express.Router();
+import authMiddleware from "../../middlewares/authMiddleware.js";
+import upload from "../../middlewares/uploadImage.js";
+import User from '../../models/User.js'; // Assicurati che questo percorso sia corretto
 
 const loginRateLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minuti
@@ -125,6 +128,42 @@ router.get(
             res.redirect(`http://localhost:3000/login?token=${token}`);
         } catch (error) {
             next(error);
+        }
+    }
+
+);
+
+// Route per caricare la foto profilo su Cloudinary
+router.post(
+    '/uploadProfilePicture', 
+    authMiddleware, 
+    upload.single('media'), 
+    async (req, res, next) => {
+        if (!req.file) {
+            return res.status(400).json({ message: 'Errore: Nessun file caricato!' });
+        }
+
+        try {
+            // Trova l'utente autenticato
+            const user = await User.findById(req.user._id);
+            if (!user) {
+                return res.status(404).json({ message: 'Utente non trovato' });
+            }
+
+            // Aggiorna la foto profilo con l'URL dell'immagine caricata su Cloudinary
+            user.avatar = req.file.path;
+            await user.save();
+
+            // Risposta con l'URL della nuova immagine del profilo
+            res
+                .status(200)
+                .json({ 
+                    message: 'Foto profilo aggiornata con successo', 
+                    profileImage: user.avatar 
+                });
+
+        } catch (error) {
+            next(error);    
         }
     }
 );

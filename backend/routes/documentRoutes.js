@@ -1,13 +1,13 @@
 import express from 'express';
-import cloudinaryUploader from '../config/cloudinaryConfig.js'; // Multer configurato per Cloudinary
 import { query, body, validationResult } from 'express-validator';
+import upload from '../middlewares/uploadImage.js';
 
 const router = express.Router();
 
 // Carica documenti
 router.post(
     '/upload', 
-    cloudinaryUploader.single('document'), 
+    upload.single('document'), 
     (req, res, next) => {
       if (!req.file) {
         return res.status(400).json({ error: 'Nessun file caricato' });

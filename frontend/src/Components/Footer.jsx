@@ -4,7 +4,7 @@ import logo from "../assets/logofooterfull.png";
 
 export default function MyFooter() {
     return (
-        <footer className="bg-white border-t py-3">
+        <footer className="z-50 border-t py-3">
             <div className="container mx-auto flex flex-wrap justify-between items-center">
                 <div className="flex items-center">
                     <a href="/" className="flex items-center text-gray-500 hover:text-gray-700">
@@ -15,7 +15,7 @@ export default function MyFooter() {
                             className="mr-2"
                         />
                     </a>
-                    <span className="text-gray-500">© 2024 LifeHub</span>
+                    <span>© 2024 LifeHub</span>
                 </div>
                 <ul className="flex space-x-4">
                     <li>

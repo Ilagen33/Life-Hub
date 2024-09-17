@@ -126,27 +126,28 @@ router.get(
     '/task/:id', 
     validateObjectId,
     authMiddleware,
-    async (req, res) => {
+    async (req, res, next) => {
 
-    try {
+        try {
 
-        const task = await Task.findById(req.params.id);
+            const task = await Task.findById(req.params.id);
 
-        if (!task) {
-            const error = new Error('Task non trovato');
-            error.statusCode = 404;
-            return next(error);
-        }
-        res
-            .json({
-                task,
-                message: "Task caricato con successo"
-            });
+            if (!task) {
+                const error = new Error('Task non trovato');
+                error.statusCode = 404;
+                return next(error);
+            }
+            res
+                .json({
+                    task,
+                    message: "Task caricato con successo"
+                });
       
-    } catch (err) {
-        next(err);
+        } catch (err) {
+            next(err);
+        }
     }
-});
+);
 
 // Rotta per creare una nuova attività
 router.post(

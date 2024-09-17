@@ -56,14 +56,10 @@ router.post(
   async (req, res, next) => {
     // Verifica se ci sono errori di validazione
     const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res
-                .status(400)
-                .json({ 
-                    errors: errors.array() 
-            });
-        }
-        next();
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
       const newNote = new Note({
         user: req.user._id,
@@ -71,12 +67,10 @@ router.post(
       });
 
       const savedNote = await newNote.save();
-      res
-        .status(201)
-        .json({
-          savedNote,
-          message: 'Appunto aggiunto con successo.'
-        });
+      res.status(201).json({
+        savedNote,
+        message: 'Appunto aggiunto con successo.',
+      });
     } catch (error) {
       console.error(error);
       next(error);

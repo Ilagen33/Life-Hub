@@ -1,7 +1,7 @@
 //AddNoteForm.jsx
 
 import React, { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
 
 const AddNoteForm = () => {
   const [title, setTitle] = useState('');
@@ -15,7 +15,7 @@ const AddNoteForm = () => {
 
     try {
       const newNote = { title, content, tags: tagArray, category };
-      await axios.post('/api/notes/add', newNote);
+      await axiosInstance.post('/Notes', newNote);
       alert('Appunto aggiunto con successo!');
       setTitle('');
       setContent('');

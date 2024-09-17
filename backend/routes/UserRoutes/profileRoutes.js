@@ -5,16 +5,31 @@ import {validationResult} from 'express-validator/lib/validation-result.js';
 import {body} from "express-validator";
 import authMiddleware from "../../middlewares/authMiddleware.js";
 import { deleteUser, updateUser, refreshAccessToken } from "../../controllers/userController.js";
+import validateObjectId from "../../middlewares/ValidateId.js";
 
 const router = express.Router();
 
 router.get(
-    '/me', 
+    `/me/:id`, 
     authMiddleware,
+    validateObjectId,
     async (req, res, next) => {
+
         try {
-            const user = await User.findById(req.user.id).select('-password');
-            res.json(user);
+
+            const user = await User.findById(req.params.id);
+
+            if (!user) {
+                const error = new Error('User non trovato');
+                error.statusCode = 404;
+                return next(error);
+            }
+
+            res.json({
+                user,
+                message: "Utente caricato con successo"
+            });
+
         } catch (err) {
             next(err);
         }

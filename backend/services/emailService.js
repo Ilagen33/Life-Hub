@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const sendWelcomeEmail = async (to, subject, htmlContent) => {
+
   try {
     // Configura il trasporto SMTP per Nodemailer
     const transporter = nodemailer.createTransport({

@@ -1,7 +1,7 @@
 //NoteList.jsx
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../utils/axiosInstance.js';
-import { useAuth } from '../context/AuthContext'; // Assumi di avere un contesto di autenticazione
+import axiosInstance from '../../utils/axiosInstance.js';
+import { useAuth } from '../../context/AuthContext'; // Assumi di avere un contesto di autenticazione
 
 const NoteList = () => {
   const { authToken } = useAuth(); // Ottieni il token di autenticazione dal contesto
@@ -40,8 +40,8 @@ const NoteList = () => {
   };
 
   return (
-    <div>
-      <h2>I miei Appunti</h2>
+    <div className='p-6 bg-white shadow-md rounded-md'>
+      <h2 className='titoloNote'>I miei Appunti</h2>
       <ul>
         {notes.map((note) => (
           <li key={note._id}>

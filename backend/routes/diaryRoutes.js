@@ -2,8 +2,8 @@ import express from 'express';
 import DiaryPage from '../models/DiaryPage.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 import { query, body, validationResult } from 'express-validator';
-import cloudinaryUploader from '../config/cloudinaryConfig.js';
 import validateObjectId from '../middlewares/ValidateId.js';
+import upload from '../middlewares/uploadImage.js';
 
 const router = express.Router();
 
@@ -35,7 +35,7 @@ router.post(
             .isDate(),
     ],
     authMiddleware,
-    cloudinaryUploader.single('media'),
+    upload.single('media'),
     async (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -166,7 +166,7 @@ router.put(
     ],
     authMiddleware,
     validateObjectId,
-    cloudinaryUploader.single('media'),
+    upload.single('media'),
     async (req, res, next) => {
          // Verifica se ci sono errori di validazione
         const errors = validationResult(req);

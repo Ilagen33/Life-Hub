@@ -1,12 +1,14 @@
-//Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Importa il modulo axios per effettuare le richieste HTTP
+import { useAuth } from "../../context/AuthContext"; // Importa il contesto di autenticazione
+import axios from "axios";
 import logo from '../../assets/lifehubfinal2.png';
 import { FaGoogle } from "react-icons/fa";
+import { toast } from 'react-toastify'; // Importa il toast
 
 export default function Login() {
     const navigate = useNavigate();
+    const { login } = useAuth(); // Ottieni la funzione di login dal contesto
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -20,19 +22,22 @@ export default function Login() {
 
     const loginUser = async (credentials) => {
         try {
+            const response = await api.post("/login", credentials); // Effettua la richiesta di login
+            console.log("Risposta API login:", response.data);
 
-          const response = await api.post("/login", credentials); // Effettua la richiesta di login
-          console.log("Risposta API login:", response.data); // Log della risposta per debugging
-          localStorage.setItem('token', response.data.token);
-          navigate("/Dashboard");
-          return response.data; // Restituisce i dati della risposta
+            // Utilizza la funzione `login` dal contesto per aggiornare il contesto di autenticazione
+            login(response.data.accessToken, response.data.user); 
 
+            console.log("Token salvato nel contesto:", response.data.accessToken);
+
+            navigate("/Dashboard");
+            return response.data; // Restituisce i dati della risposta
         } catch (error) {
-          console.error("Errore nella chiamata API di login:", error); // Log dell'errore per debugging
-          setError("Email o password errati"); // Imposta l'errore nello stat
-          throw error; // Lancia l'errore per essere gestito dal chiamante
+            console.error("Errore nella chiamata API di login:", error);
+            setError("Email o password errati");
+            throw error;
         }
-      };
+    };
 
     const handleChange = (e) => {
         setFormData({
@@ -47,11 +52,13 @@ export default function Login() {
 
         try {
             const response = await loginUser(formData);
-            console.log("Login effettuati con successo!", response);
-            navigate("/Dashboard");
+            console.log("Login effettuato con successo!", response);
+            toast.success('Login effettuato con successo.', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
         } catch (error) {
             console.error("Errore durante il login:", error);
-            alert("Credenziali non valide. Riprova.")
+            toast.error('Errore durante il caricamento della foto.', error); // Notifica di errore
             setError("Credenziali non valide. Riprova.");
         }
     };
@@ -59,27 +66,23 @@ export default function Login() {
     const handleGoogleLogin = async () => {
         window.location.href = 'http://localhost:5000/api/google/callback';
     }
-    return(
+
+    return (
         <>
             <a href="/">
-                    <img
-                        alt="Logo-book"
-                        src={logo}
-                        width="100"
-                        className="rounded-full m-5"
-                    />
-                </a>
+                <img
+                    alt="Logo"
+                    src={logo}
+                    width="100"
+                    className="rounded-full m-5"
+                />
+            </a>
             <div className="min-h-screen flex items-center justify-center bg-gray-100">
                 <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-                    {/* <!-- Messaggio di benvenuto --> */}
-                    <h1 className="text-9xl font-bold text-center text-gray-800 mb-6 h1-login">
-                        Login
-                    </h1>
-    
-                    {/* <!-- Form di autenticazione --> */}
+                    <h1 className="text-9xl font-bold text-center text-gray-800 mb-6 h1-login">Login</h1>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-4">
-                            <label className="block text-gray-700 font-bold mb-2" for="email">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="email">
                                 Email
                             </label>
                             <input  
@@ -94,7 +97,7 @@ export default function Login() {
                         </div>
 
                         <div className="mb-6">
-                            <label className="block text-gray-700 font-bold mb-2" for="password">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="password">
                                 Password
                             </label>
                             <input
@@ -107,36 +110,31 @@ export default function Login() {
                                 autoComplete="current-password"
                             />
                         </div>
-                            {/* Visualizzazione dell'errore */}
-                            {error && <p className="text-red-600 text-center mt-2">{error}</p>}
+                        {error && <p className="text-red-600 text-center mt-2">{error}</p>}
 
-                            {/* <!-- Pulsante di Login --> */}
-                                <button
-                                    type="submit"
-                                    className="text-white w-full py-3 rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-600 transition font-bold mt-4 bottone-login1"
-                                    onClick={handleSubmit}
-                                >
-                                    Accedi
-                                </button>
+                        <button
+                            type="submit"
+                            className="text-white w-full py-3 rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-600 transition font-bold mt-4 bottone-login1"
+                        >
+                            Accedi
+                        </button>
 
-                            {/* <!-- Pulsante di Login con Google --> */}
-                                <button
-                                    type="button"
-                                    onClick={handleGoogleLogin}
-                                    className="flex items-center justify-center text-white w-full py-3 rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-600 transition font-bold mt-4 bottone-login2"
-                                >
-                                    Accedi con Google
-                                    <FaGoogle className="ml-2"/>
-                                </button>
+                        <button
+                            type="button"
+                            onClick={handleGoogleLogin}
+                            className="flex items-center justify-center text-white w-full py-3 rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-600 transition font-bold mt-4 bottone-login2"
+                        >
+                            Accedi con Google
+                            <FaGoogle className="ml-2" />
+                        </button>
                     </form>
 
-                        {/* <!-- Link alla pagina di registrazione --> */}
-                        <p className="text-center text-gray-600 mt-6">
-                            Non sei ancora registrato?    
-                            <a href="/register" className="underline text-orange-600 hover:text-red-700"> Clicca qui!</a>
-                        </p>
+                    <p className="text-center text-gray-600 mt-6">
+                        Non sei ancora registrato?    
+                        <a href="/register" className="underline text-orange-600 hover:text-red-700"> Clicca qui!</a>
+                    </p>
                 </div>
             </div>
         </>
-    )
-};
+    );
+}

@@ -109,7 +109,7 @@ const HealthChart = () => {
   };
 
   return (
-    <div>
+    <div className="p-6 bg-white shadow-md rounded-md">
       <h2>Monitoraggio della Salute</h2>
       <Line data={healthChartData} options={healthChartOptions} />
       <h2>Produttività</h2>

@@ -1,3 +1,4 @@
+//AuthContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
@@ -7,16 +8,24 @@ const AuthContext = createContext();
 export function useAuth() {
     return useContext(AuthContext);
 }
-
 export const AuthProvider = ({ children }) => {
-    const [authToken, setAuthToken] = useState(() => localStorage.getItem('authToken'));
-    const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user')));
+    const [authToken, setAuthToken] = useState(() => localStorage.getItem('authToken') || null);
+const [user, setUser] = useState(() => {
+  try {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  } catch (error) {
+    console.error("Errore nel parsing del JSON di user:", error);
+    return null;
+  }
+});
+
     const navigate = useNavigate();
 
     // Funzione per verificare se il token è scaduto
-    const isTokenExpired = (token) => {
+    const isTokenExpired = (authToken) => {
         try {
-            const decodedToken = jwtDecode(token);
+            const decodedToken = jwtDecode(authToken);
             const currentTime = Date.now() / 1000; // Tempo corrente in secondi
             return decodedToken.exp < currentTime; // Verifica se il token è scaduto
         } catch (error) {
@@ -36,6 +45,8 @@ export const AuthProvider = ({ children }) => {
         setUser(userData);
         localStorage.setItem('authToken', token);
         localStorage.setItem('user', JSON.stringify(userData));
+
+        // Naviga alla dashboard solo dopo aver settato i dati utente
         navigate('/dashboard');
     };
 
@@ -50,7 +61,7 @@ export const AuthProvider = ({ children }) => {
     const isAuthenticated = !!authToken && !isTokenExpired(authToken); // Aggiorna lo stato di autenticazione
 
     return (
-        <AuthContext.Provider value={{ authToken, user, login, logout, isAuthenticated }}>
+        <AuthContext.Provider value={{ authToken, user, login, logout, isAuthenticated, setAuthToken }}>
             {children}
         </AuthContext.Provider>
     );

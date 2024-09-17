@@ -1,22 +1,37 @@
 //taskManager.jsx
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../utils/axiosInstance.js';
+import { useAuth } from '../context/AuthContext.js'; 
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
 
+  const { authToken } = useAuth(); // Ottieni il token di autenticazione dal contesto
+  const [user, setUser] = useState(() => {
+    const userData = localStorage.getItem('user');
+    return userData ? JSON.parse(userData) : null;
+  });
+  
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get('/api/tasks');
+        const response = await axios.get('/tasks');
+        if (Array.isArray(response.data)) {
+          setTasks(response.data);
+        } else {
+          console.error('I dati ricevuti non sono un array:', response.data);
+        }
+        
+        console.log('Dati ricevuti:', response.data); // Logga i dati ricevuti
         setTasks(response.data);
       } catch (error) {
         console.error('Errore durante il recupero delle attività:', error);
       }
     };
-
+  
     fetchTasks();
-  }, []);
+  }, [authToken]);
+  
 
   const toggleCompleted = async (taskId, completed) => {
     try {

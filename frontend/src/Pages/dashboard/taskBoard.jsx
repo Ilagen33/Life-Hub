@@ -1,77 +1,75 @@
 //taskBoard.jsx
 import React, { useState, useEffect } from 'react';
-import Board from 'react-trello';
-import axios from '../axiosInstance';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import axiosInstance from '../../utils/axiosInstance.js'; // Assicurati di usare la tua istanza Axios
+import { useAuth } from '../../context/AuthContext.js'; // Per ottenere il token di autenticazione
+
+const ItemType = 'TASK';
+
+const Task = ({ task, index, moveTask }) => {
+  const [, ref] = useDrag({
+    type: ItemType,
+    item: { index },
+  });
+
+  const [, drop] = useDrop({
+    accept: ItemType,
+    hover: (draggedItem) => {
+      if (draggedItem.index !== index) {
+        moveTask(draggedItem.index, index);
+        draggedItem.index = index;
+      }
+    },
+  });
+
+  return (
+    <div ref={(node) => ref(drop(node))} style={{ padding: '5px', marginBottom: '3px', backgroundColor: 'white', borderRadius: '4px' }}>
+      {task.title}
+    </div>
+  );
+};
 
 const TaskBoard = () => {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState([]); // Inizialmente nessun task
+  const { authToken } = useAuth(); // Ottieni il token di autenticazione dal contesto
 
+  // Funzione per spostare i task
+  const moveTask = (fromIndex, toIndex) => {
+    const updatedTasks = [...tasks];
+    const [movedTask] = updatedTasks.splice(fromIndex, 1);
+    updatedTasks.splice(toIndex, 0, movedTask);
+    setTasks(updatedTasks);
+  };
+
+  // Funzione per recuperare i task dal backend
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const res = await axios.get('/tasks');
-        setTasks(res.data);
-      } catch (err) {
-        console.error('Errore nel caricamento delle attività:', err);
+        const res = await axiosInstance.get('/task');
+        setTasks(res.data.tasks); // Imposta i task recuperati
+      } catch (error) {
+        console.error('Errore durante il recupero dei task:', error);
       }
     };
-    fetchTasks();
-  }, []);
 
-  const lanes = [
-    {
-      id: 'pending',
-      title: 'Da fare',
-      cards: tasks.filter((task) => task.status === 'pending').map((task) => ({
-        id: task._id,
-        title: task.title,
-        description: task.content,
-        label: task.priority
-      }))
-    },
-    {
-      id: 'in-progress',
-      title: 'In corso',
-      cards: tasks.filter((task) => task.status === 'in-progress').map((task) => ({
-        id: task._id,
-        title: task.title,
-        description: task.content,
-        label: task.priority
-      }))
-    },
-    {
-      id: 'completed',
-      title: 'Completato',
-      cards: tasks.filter((task) => task.status === 'completed').map((task) => ({
-        id: task._id,
-        title: task.title,
-        description: task.content,
-        label: task.priority
-      }))
+    if (authToken) {
+      fetchTasks();
     }
-  ];
+  }, [authToken]); // Esegui il fetch solo quando `authToken` è disponibile
 
   return (
-    <Board
-      data={{ lanes }}
-      draggable
-      laneDraggable={false}
-      handleDragEnd={async (cardId, sourceLaneId, targetLaneId) => {
-        // Aggiorna lo stato del task nel backend
-        try {
-          const updatedTask = tasks.find((task) => task._id === cardId);
-          updatedTask.status = targetLaneId;
-          await axios.put(`/tasks/${cardId}`, updatedTask);
-
-          // Aggiorna lo stato delle attività
-          setTasks(tasks.map((task) =>
-            task._id === cardId ? { ...task, status: targetLaneId } : task
-          ));
-        } catch (err) {
-          console.error('Errore nell\'aggiornamento dello stato del task:', err);
-        }
-      }}
-    />
+    <DndProvider backend={HTML5Backend}>
+      <div className="w-full p-4 bg-white shadow-md rounded-md">
+        {tasks.length === 0 ? (
+          <p>Nessun task disponibile</p>
+        ) : (
+          tasks.map((task, index) => (
+            <Task key={task._id} index={index} task={task} moveTask={moveTask} />
+          ))
+        )}
+      </div>
+    </DndProvider>
   );
 };
 

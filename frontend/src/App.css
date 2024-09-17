@@ -3,7 +3,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@layer components {
+    .all-\[unset\] {
+      all: unset;
+    }
+  }
 /* Import font navbar */
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
 
@@ -15,14 +19,11 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* GENERAL*/
-.App {
-    border: solid 20px #453D3A;
-}
+/* Landing-Page*/
 
 .Landing-page {
     background-color: #DFD8D5;
-
+    border: solid 20px #453D3A;
 }
 
 /* LANDING PAGE */
@@ -30,6 +31,7 @@
 .navnav {
     border-top: solid 30px #DFD8D5;
 }
+
 .home-hero {
     padding: 20px;
 }
@@ -109,32 +111,261 @@ main div h2 {
 
 /* DASHNAV */
 .side-nav {
-    background-color: #91A3B0 ;
+    background-color: #9ac3e0 ;
 }
 
-.side-nav ul li a {
-    font-weight:100;
-    margin: 0 100px;
-    padding:0;
-}
-
-.dropdown.relative button {
-    background-color: #CF4307;
-}
-
+/* DASH SIDEBAR */
+.sidebar {
+    width: 250px;
+    background-color: #2d3748; /* Colore di sfondo scuro */
+    color: white;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-top: 2rem;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sidebar a {
+    text-decoration: none;
+    color: #a0aec0; /* Colore testo */
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .sidebar a:hover {
+    background-color: #4a5568; /* Hover background */
+  }
+  
+  .sidebar a.active {
+    background-color: #4a5568; /* Colore di sfondo attivo */
+  }
+  
+  .sidebar h2 {
+    color: #e2e8f0; /* Colore del titolo */
+    text-align: center;
+    font-weight: bold;
+  }
+  
 /* CALENDAR DASHBOARD */
 
 main .react-calendar {
     border: none;
+    width: 800px;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+    height: 50px;
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+    font-size: 14px;
 }
 
 .react-calendar abbr {
     text-decoration: none;
 }
 
+.react-calendar__tile abbr {
+    position: absolute;  /* Posiziona l'elemento rispetto alla cella */
+    top: 8px;            /* Allinea in alto */
+    left: 8px;           /* Allinea a sinistra */
+    font-weight:lighter;   /* Grassetto */
+    font-size: 1rem;   /* Aumenta leggermente la dimensione del numero */
+    text-decoration: none; /* Rimuove la sottolineatura predefinita dell'elemento abbr */
+}
+
+/* Centrare il contenuto del task */
+.react-calendar__tile {
+    position: relative;  /* Necessario per l'uso di "position: absolute" nell'elemento abbr */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px; /* Aggiungere spazio interno */
+}
+
+.react-calendar__tile.react-calendar__month-view__days__day {
+    border: 2px solid #FFFFFF;
+    background-color: #F5F5F5;
+    /* box-shadow: inset 0px 20px 10px 0px #dddada; */
+}
+
+.react-calendar__tile div{
+    /* opacity: 0.8; */
+}
+
+.react-calendar__tile div span{
+    color: rgba(128, 128, 128, 0.597);
+    max-width: 80px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .react-calendar__navigation button {
     color: #91A3B0;
 }
+
+.react-calendar__tile span.rounded-full {
+    margin-right: 5px;
+    width: 12px;
+}
+
+/* UserInfo (UserComponent) */
+.usertext {
+    color:#CF4307;
+    font-size: 20px;
+}
+
+/* (UserComponent -> ProfilePictureUploader)
+Sezione info utente e modale per modifica dell'avatar */
+
+/* Stile del Modal */
+/* Stile per l'overlay */
+.customOverlay {
+    background-color: rgba(0, 0, 0, 0.5); /* Overlay con sfondo scuro semi-trasparente */
+    position: fixed;  /* Fissa l'overlay all'interno della finestra */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000; /* Assicurati che l'overlay e il modale siano in primo piano */
+}
+
+/* Stile per il contenuto del modale */
+.customModal {
+    width: 400px; /* Larghezza del modale */
+    height: auto;
+    margin: auto; /* Posiziona il modale al centro */
+    padding: 40px;
+    border-radius: 10px; /* Bordo arrotondato */
+    border: none; /* Nessun bordo visibile */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Ombreggiatura moderna */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute; /* Posiziona il contenuto in modo assoluto */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centro assoluto */
+    background-color: white; /* Assicurati che il modale abbia uno sfondo */
+    z-index: 1001; /* Più alto dell'overlay */
+}
+
+
+/* Titolo del Modal */
+.titoloModal {
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 600;
+    font-size: 22px;
+}
+
+/* Nota sul caricamento dell'immagine */
+.image-note {
+    font-size: 14px;
+    color: #9d9b9b; /* Colore grigio per il testo */
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    font-style: italic; /* Corsivo */
+}
+
+
+/* icona per modificare l'immagine */
+.iconaModifica {
+    cursor: pointer;
+    font-size: 15px;
+    color: grey;
+    margin-top: 5px;
+} 
+
+/* Bottone per chiudere il modal senza modifiche */
+.closeButtonStyle  {
+    padding: 10px 20px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    width: 100%;
+}
+
+/* Bottone per salvare la nuova immagine*/
+.buttonStyle {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+/* Bottone per salvare la nuova immagine */
+.uploadButton {
+    padding: 10px 20px;
+    background-color: grey;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-bottom: 15px;
+    transition: background-color 0.3s;
+    text-align: center;
+    width: 100%;
+}
+
+/* LISTA TO-DO (Dashboard) */
+.todo-list {
+    width: 100%;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.todo-list h3, .titoloNote {
+    margin-bottom: 10px;
+    color:#CF4307;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.todo-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.todo-list li {
+    display: flex;
+    padding: 10px 0;
+}
+
+.todo-list button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.todo-list button:hover {
+    background-color: #45a049;
+}
+
 
 /* DIARY PAGE */
 .diary-page {
@@ -201,4 +432,3 @@ main .react-calendar {
   .diary-page ul li audio {
     margin-top: 10px;
   }
-  

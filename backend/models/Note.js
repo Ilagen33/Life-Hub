@@ -45,7 +45,7 @@ const noteSchema = new mongoose.Schema(
   
   },
   {
-    collection: "HealthDatas",
+    collection: "Notes",
     timestamps: true,
   }
 );

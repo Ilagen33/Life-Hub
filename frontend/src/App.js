@@ -4,7 +4,7 @@ import MyFooter from './Components/Footer.jsx';
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './Pages/landingPage/Home.jsx';
-import ToDo from './Pages/To-Do.jsx';
+import ToDo from './Pages/dashboard/To-Do.jsx';
 import Food from './Pages/Food.jsx';
 import Exercise from './Pages/Exercise.jsx';
 import Login from './Pages/landingPage/Login.jsx';
@@ -13,7 +13,9 @@ import Dashboard from './Pages/dashboard/Dashboard.jsx';
 import {AuthProvider} from './context/AuthContext.js';
 import PrivateRoute from './Components/PrivateRoute.js';
 import { messaging } from './service/firebase.js'; // Assicurati che il percorso di importazione sia corretto
- 
+import DaCancellare from './Pages/DaCancellare.jsx';
+import { ToastContainer, toast } from 'react-toastify'; // Importa react-toastify
+import 'react-toastify/dist/ReactToastify.css'; // Importa lo stile predefinito
 function App() {
   useEffect(() => {
     // Funzione per richiedere il permesso per le notifiche push
@@ -41,7 +43,6 @@ function App() {
         <AuthProvider>
 
           <Routes>
-
             <Route path="/" element={<Home/>} />
             <Route path="/login" element= {<Login/>} />
             <Route path="/register" element= {<Register/>} />
@@ -50,12 +51,14 @@ function App() {
             <Route path="/Food" element= {<PrivateRoute><Food /></PrivateRoute>} />
             <Route path="/Exercise" element= {<PrivateRoute><Exercise /></PrivateRoute>} />
             <Route path="/Dashboard" element= {<Dashboard />} />
-          
+            <Route path="/DaCancellare" element=  {<DaCancellare />} />
           </Routes>
         
         </AuthProvider>
         
         <MyFooter/>
+        <ToastContainer position="bottom-right" />  {/* Aggiungi il ToastContainer qui */}
+
       </Router>
     </div>
   );

@@ -50,7 +50,7 @@ export const registerUser = async (req, res, next) => {
         <!-- Body -->
         <tr>
             <td align="center" style="padding: 20px;">
-                <p style="font-size: 16px; color: #333333; margin: 0;">Ciao <strong>{{username}}</strong>,</p>
+                <p style="font-size: 16px; color: #333333; margin: 0;">Ciao <strong>${newUser.nome}</strong>,</p>
                 <p style="font-size: 16px; color: #333333; line-height: 1.6; margin-top: 20px;">
                     Grazie per esserti unito a <strong>LifeHub</strong>! Siamo entusiasti di averti con noi.
                 </p>
