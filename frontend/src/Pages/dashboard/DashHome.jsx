@@ -86,9 +86,9 @@ export default function DashHome () {
                             <Suspense fallback={<p>Loading TaskBoard...</p>}>
                                 <TaskBoard />
                             </Suspense>
-                            <Suspense fallback={<p>Loading HealthChart...</p>}>
+                            {/* <Suspense fallback={<p>Loading HealthChart...</p>}>
                                 <HealthChart />
-                            </Suspense>
+                            </Suspense> */}
                         </div>  
                         <div>
                             <Suspense fallback={<p>Loading NoteList...</p>}>

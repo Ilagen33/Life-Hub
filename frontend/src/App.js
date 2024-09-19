@@ -1,10 +1,9 @@
 //App.js
 import './App.css';
 import MyFooter from './Components/Footer.jsx';
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './Pages/landingPage/Home.jsx';
-import ToDo from './Pages/dashboard/To-Do.jsx';
 import Food from './Pages/Food.jsx';
 import Exercise from './Pages/Exercise.jsx';
 import Login from './Pages/landingPage/Login.jsx';
@@ -16,6 +15,9 @@ import { messaging } from './service/firebase.js'; // Assicurati che il percorso
 import DaCancellare from './Pages/DaCancellare.jsx';
 import { ToastContainer, toast } from 'react-toastify'; // Importa react-toastify
 import 'react-toastify/dist/ReactToastify.css'; // Importa lo stile predefinito
+import TaskBoard from './Pages/dashboard/taskBoard.jsx';
+import ToDo from './Pages/dashboard/To-Do.jsx';
+
 function App() {
   useEffect(() => {
     // Funzione per richiedere il permesso per le notifiche push
@@ -51,7 +53,7 @@ function App() {
             <Route path="/Food" element= {<PrivateRoute><Food /></PrivateRoute>} />
             <Route path="/Exercise" element= {<PrivateRoute><Exercise /></PrivateRoute>} />
             <Route path="/Dashboard" element= {<Dashboard />} />
-            <Route path="/DaCancellare" element=  {<DaCancellare />} />
+            <Route path="/DaCancellare" element=  {<TaskBoard />} />
           </Routes>
         
         </AuthProvider>

@@ -1,17 +1,14 @@
 // Dashboard.jsx
-import React, { Suspense, lazy, useState } from "react";
-import { Routes, Route } from 'react-router-dom';
+import React, { useState } from "react";
 import DashNav from "../../Components/dashNavbar.jsx";
 import Sidebar from "../../Components/SideBar.jsx";
+import { Routes, Route, Outlet, NavLink } from 'react-router-dom';
+import CalendarComponent from './CalendarComponent';
+import TaskBoard from './taskBoard';
+import NoteList from './NoteList';
+import DashHome from "./DashHome.jsx";
 
-// Lazy load dei componenti
-const DashboardHome = lazy(() => import('./DashHome'));
-const TaskList = lazy(() => import('./taskBoard'));
-const HealthChart = lazy(() => import('./HealthChart'));
-const NoteList = lazy(() => import('./NoteList'));
-const ToDo = lazy(() => import('./To-Do'));
-
-export default function Dashboard() {
+const DashboardLayout =() =>{
     const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -27,16 +24,29 @@ export default function Dashboard() {
                 <DashNav />
                 <main className="p-6">
                     {/* Rotte della dashboard */}
-                    <Routes>
-                        {/* DashboardHome è il contenuto predefinito */}
-                        <Route path="/" element={<DashboardHome />} />
-                        <Route path="/tasks" element={<Suspense fallback={<p>Loading...</p>}><TaskList /></Suspense>} />
-                        <Route path="/health" element={<Suspense fallback={<p>Loading...</p>}><HealthChart /></Suspense>} />
-                        <Route path="/todo" element={<Suspense fallback={<p>Loading...</p>}><ToDo /> </Suspense>} />
-                        <Route path="/notes" element={<Suspense fallback={<p>Loading...</p>}><NoteList /> </Suspense>} />
-                    </Routes>
+                    <Outlet />
                 </main>
             </div>
         </div>
     )
 };
+
+
+// Dashboard principale con sotto rotte
+const Dashboard = () => {
+    return (
+        <Routes>
+            {/* Definiamo la rotta principale "/dashboard" */}
+            <Route path="/" element={<DashboardLayout />}>
+                {/* Sotto rotte della Dashboard */}
+                <Route path="/" element={<DashHome />} />
+                <Route path="/calendar" element={<CalendarComponent />} />
+                <Route path="/tasks" element={<DashHome />} />
+                <Route path="/notes" element={<NoteList />} />
+                {/* Aggiungi altre sotto rotte qui */}
+            </Route>
+        </Routes>
+    );
+};
+
+export default Dashboard;

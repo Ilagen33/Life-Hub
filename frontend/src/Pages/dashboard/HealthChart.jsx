@@ -37,7 +37,7 @@ const HealthChart = () => {
   useEffect(() => {
     const fetchHealthData = async () => {
       try {
-        const res = await axios.get('/health', {
+        const res = await axios.get('/HealthData', {
           headers: { Authorization: `Bearer ${authToken}` },  // Includi il token nella richiesta
         });
         setHealthData(res.data);
@@ -48,9 +48,10 @@ const HealthChart = () => {
 
     const fetchProductivityData = async () => {
       try {
-        const res = await axios.get('/productivity', {
+        const res = await axios.get('/activity', {
           headers: { Authorization: `Bearer ${authToken}` },  // Includi il token nella richiesta
         });
+        console.log(res.data);
         setProductivityData(res.data);
       } catch (err) {
         console.error('Errore durante il caricamento dei dati di produttività:', err);

@@ -93,7 +93,7 @@ router.get(
                 .skip(salta)
                 .limit(limite);
         
-            const totale = await Task.countDocuments({user: req.user._id});
+            const totale = await Activity.countDocuments({user: req.user._id});
 
             res
                 .status(200)

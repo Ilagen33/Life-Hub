@@ -55,7 +55,7 @@ const Sidebar = () => {
 
         <div className={`mt-10 space-y-4 w-full transition-full duration-500 ${isOpen ? 'translate-y-0' : '-translate-y-40'}`}>
         <NavLink
-          to="/dashboard"
+          to="/Dashboard"
           className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 rounded transition-all duration-500"
         >
           <FontAwesomeIcon icon={faCalendar} className="mr-2" />
@@ -70,7 +70,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/tasks"
+          to="/Dashboard/tasks"
           className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 rounded transition-all duration-500"
         >
           <FontAwesomeIcon icon={faTasks} className="mr-2" />
@@ -84,7 +84,8 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/meal-planner"
+        
+          to="/Dashboard/meal-planner"
           className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 rounded transition-all duration-500"
         >
           <FontAwesomeIcon icon={faUtensils} className="mr-2" />
@@ -98,7 +99,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/fitness"
+          to="/Dashboard/fitness"
           className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 rounded transition-all duration-500"
         >
           <FontAwesomeIcon icon={faRunning} className="mr-2" />
@@ -112,7 +113,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/diary"
+          to="/Dashboard/diary"
           className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 rounded transition-all duration-500"
         >
           <FontAwesomeIcon icon={faBook} className="mr-2" />
@@ -126,7 +127,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/statistics"
+          to="/Dashboard/statistics"
           className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 rounded transition-all duration-500"
         >
           <FontAwesomeIcon icon={faChartLine} className="mr-2" />
@@ -140,7 +141,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/settings"
+          to="/Dashboard/settings"
           className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 rounded transition-all duration-500"
         >
           <FontAwesomeIcon icon={faCog} className="mr-2" />
