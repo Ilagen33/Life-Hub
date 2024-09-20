@@ -14,7 +14,7 @@ export default function Home() {
                 </h1>
                 <h2 className="bounceInDown">ALL-IN-ONE PLATFORM</h2>
 
-                <h3>Una piattaforma intuitiva e sicura per gestire la tua vita personale. 
+                <h3 className="first-h3">Una piattaforma intuitiva e sicura per gestire la tua vita personale. 
                     Con LifeHub, semplifichi la tua giornata, tieni traccia di ogni impegno e riflessione, mantieni tutto sotto controllo in un unico posto. 
                 </h3>
 
