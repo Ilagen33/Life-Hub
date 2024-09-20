@@ -7,6 +7,8 @@ import CalendarComponent from './CalendarComponent';
 import TaskBoard from './taskBoard';
 import NoteList from './NoteList';
 import DashHome from "./DashHome.jsx";
+import TasksComponent from "./TasksComponent.jsx";
+import TaskPage from "../tasks/TaskPage.jsx";
 
 const DashboardLayout =() =>{
     const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -22,7 +24,7 @@ const DashboardLayout =() =>{
             {/* Contenuto principale con Navbar fissa */}
             <div className="flex-1">
                 <DashNav />
-                <main className="p-6">
+                <main className="m-8 me-0">
                     {/* Rotte della dashboard */}
                     <Outlet />
                 </main>
@@ -39,10 +41,10 @@ const Dashboard = () => {
             {/* Definiamo la rotta principale "/dashboard" */}
             <Route path="/" element={<DashboardLayout />}>
                 {/* Sotto rotte della Dashboard */}
-                <Route path="/" element={<DashHome />} />
-                <Route path="/calendar" element={<CalendarComponent />} />
-                <Route path="/tasks" element={<DashHome />} />
-                <Route path="/notes" element={<NoteList />} />
+                <Route index element={<DashHome />} />
+                <Route path="calendar" element={<CalendarComponent />} />
+                <Route path="tasks" element={<TaskPage/>} />
+                <Route path="notes" element={<NoteList />} />
                 {/* Aggiungi altre sotto rotte qui */}
             </Route>
         </Routes>

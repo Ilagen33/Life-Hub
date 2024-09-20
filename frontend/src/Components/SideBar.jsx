@@ -85,7 +85,7 @@ const Sidebar = () => {
 
         <NavLink
         
-          to="/Dashboard/meal-planner"
+          to="/Dashboard/calendar"
           className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 rounded transition-all duration-500"
         >
           <FontAwesomeIcon icon={faUtensils} className="mr-2" />
@@ -99,7 +99,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/Dashboard/fitness"
+          to="/Dashboard/notes"
           className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 rounded transition-all duration-500"
         >
           <FontAwesomeIcon icon={faRunning} className="mr-2" />

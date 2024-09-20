@@ -1,7 +1,7 @@
 //AddNoteForm.jsx
 
 import React, { useState } from 'react';
-import axiosInstance from '../utils/axiosInstance';
+import axiosInstance from '../../utils/axiosInstance';
 
 const AddNoteForm = () => {
   const [title, setTitle] = useState('');
@@ -27,7 +27,7 @@ const AddNoteForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className='ms-12 p-6 bg-white shadow-md rounded-md'>
       <h2>Aggiungi Nuovo Appunto</h2>
       <div>
         <label>Titolo</label>

@@ -222,102 +222,91 @@ router.post(
 router.put(
     '/task/:id',
     [
-        body('title')
-            .optional()
-            .isString()
-            .trim()
-            .escape()
-            .withMessage('Il titolo deve essere una stringa valida'),
-
-        body('status')
-            .optional()
-            .isIn(['completed', 'pending', 'in-progress'])
-            .withMessage('Lo status deve essere uno dei seguenti valori: completed, pending, in-progress'),
-
-        body('category')
-            .optional()
-            .isString()
-            .trim()
-            .escape()
-            .withMessage('La categoria deve essere una stringa valida'),
-
-        body('dueDate')
-            .optional()
-            .isISO8601()
-            .toDate()
-            .withMessage('Il formato della data non è valido'),
-
-        body('content')
-            .optional()
-            .trim()
-            .isLength({ max: 2500 })
-            .withMessage('Il contenuto non può superare i 2500 caratteri')
+      body('title')
+        .optional()
+        .isString()
+        .trim()
+        .escape()
+        .withMessage('Il titolo deve essere una stringa valida'),
+  
+      body('status')
+        .optional()
+        .isIn(['completed', 'pending', 'in-progress'])
+        .withMessage('Lo status deve essere uno dei seguenti valori: completed, pending, in-progress'),
+  
+      body('category')
+        .optional()
+        .isString()
+        .trim()
+        .escape()
+        .withMessage('La categoria deve essere una stringa valida'),
+  
+      body('dueDate')
+        .optional()
+        .isISO8601()
+        .toDate()
+        .withMessage('Il formato della data non è valido'),
+  
+      body('content')
+        .optional()
+        .trim()
+        .isLength({ max: 2500 })
+        .withMessage('Il contenuto non può superare i 2500 caratteri')
     ],
     validateObjectId,
     authMiddleware,
     async (req, res, next) => {
-
-        // Verifica se ci sono errori di validazione
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res
-                .status(400)
-                .json({ 
-                    errors: errors.array() 
-                });
+      // Verifica se ci sono errori di validazione
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+  
+      // Verifica se almeno un campo è stato fornito
+      if (Object.keys(req.body).length === 0) {
+        return res.status(400).json({ message: 'Nessun dato fornito per l\'aggiornamento' });
+      }
+  
+      // Filtra le proprietà non desiderate dal corpo della richiesta
+      const allowedUpdates = ['title', 'status', 'category', 'dueDate', 'content', 'tags', 'priority'];
+      const updates = Object.keys(req.body);
+  
+      // Rimuovi qualsiasi proprietà non consentita da `req.body`
+      const filteredUpdates = updates.reduce((acc, update) => {
+        if (allowedUpdates.includes(update)) {
+          acc[update] = req.body[update];
         }
-
-        // Verifica se almeno un campo è stato fornito
-        //Object.keys() è un metodo JavaScript che restituisce un array contenente tutte le chiavi enumerabili di un oggetto
-        //Quindi se il corpo della richiesta non inserisce nessuna proprietà dell'oggetto restituisce errore
-        if (Object.keys(req.body).length === 0) {
-            return res
-                .status(400)
-                .json({ 
-                    message: "Nessun dato fornito per l'aggiornamento"
-                });
+        return acc;
+      }, {});
+  
+      // Se non rimane nulla da aggiornare dopo il filtraggio
+      if (Object.keys(filteredUpdates).length === 0) {
+        return res.status(400).json({ message: 'Nessun campo valido fornito per l\'aggiornamento' });
+      }
+  
+      const { id } = req.params;
+  
+      try {
+        const updatedTask = await Task.findByIdAndUpdate(
+          { _id: id, user: req.user._id },
+          filteredUpdates, // Usa solo i campi filtrati
+          { new: true, runValidators: true }
+        );
+  
+        if (!updatedTask) {
+          return res.status(404).json({ message: 'Task da aggiornare non presente o non trovato' });
         }
-
-        // Controlli a livello di applicazione
-        //Ci assicuriamo che le modifiche siano consentite
-        const allowedUpdates = ['title', 'status', 'category', 'dueDate', 'content'];
-        const updates = Object.keys(req.body);
-        const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
-
-        if (!isValidOperation) {
-            return res.status(400).json({ message: "Aggiornamento non valido!" });
-        }
-
-        const { id } = req.params;
-        const update = req.body;
-    
-        try {
-            const updatedTask = await Task.findByIdAndUpdate(
-                {_id: id, user: req.user._id},
-                update,
-                { new: true, runValidators: true}
-            );
-
-            if(!updatedTask) {
-                return res
-                    .status(404)
-                    .json({
-                        message: "Task da aggiornare non presente o non trovato"
-                    });
-            };
-
-            res
-                .json({
-                    updatedTask,
-                    message: "Task Aggiornato!!"
-                });
-
-        } catch (err) {
-            next(err);    
-        }
-      
+  
+        res.json({ 
+            task: updatedTask, 
+            message: 'Task Aggiornato!!' 
+        });
+      } catch (err) {
+        next(err);
+      }
     }
-);
+  );
+  
 
 // Rotta per cancellare un'attività
 router.delete(

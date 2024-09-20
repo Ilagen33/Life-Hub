@@ -1,7 +1,7 @@
 //taskManager.jsx
 import React, { useState, useEffect } from 'react';
-import axios from '../utils/axiosInstance.js';
-import { useAuth } from '../context/AuthContext.js'; 
+import axios from '../../utils/axiosInstance.js';
+import { useAuth } from '../../context/AuthContext.js'; 
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
@@ -9,21 +9,18 @@ const TaskList = () => {
   const { authToken } = useAuth(); // Ottieni il token di autenticazione dal contesto
   const [user, setUser] = useState(() => {
     const userData = localStorage.getItem('user');
-    return userData ? JSON.parse(userData) : null;
   });
   
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get('/tasks');
-        if (Array.isArray(response.data)) {
-          setTasks(response.data);
+        const response = await axios.get('/task');
+        if (Array.isArray(response.data.tasks)) {
+          setTasks(response.data.tasks);
         } else {
           console.error('I dati ricevuti non sono un array:', response.data);
         }
-        
         console.log('Dati ricevuti:', response.data); // Logga i dati ricevuti
-        setTasks(response.data);
       } catch (error) {
         console.error('Errore durante il recupero delle attività:', error);
       }
@@ -35,7 +32,7 @@ const TaskList = () => {
 
   const toggleCompleted = async (taskId, completed) => {
     try {
-      await axios.put(`/api/tasks/edit/${taskId}`, { completed: !completed });
+      await axios.put(`/tasks/${taskId}`, { completed: !completed });
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
           task._id === taskId ? { ...task, completed: !completed } : task
@@ -48,7 +45,7 @@ const TaskList = () => {
 
   const deleteTask = async (taskId) => {
     try {
-      await axios.delete(`/api/tasks/delete/${taskId}`);
+      await axios.delete(`/tasks/${taskId}`);
       setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
     } catch (error) {
       console.error('Errore durante l\'eliminazione dell\'attività:', error);
@@ -56,7 +53,7 @@ const TaskList = () => {
   };
 
   return (
-    <div>
+    <div className='ms-12 p-6 bg-white shadow-md rounded-md'>
       <h2>Lista delle Attività</h2>
       <ul>
         {tasks.map((task) => (

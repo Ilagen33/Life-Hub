@@ -52,7 +52,7 @@ function App() {
             <Route path="/To-Do" element= {<PrivateRoute><ToDo/></PrivateRoute>} />
             <Route path="/Food" element= {<PrivateRoute><Food /></PrivateRoute>} />
             <Route path="/Exercise" element= {<PrivateRoute><Exercise /></PrivateRoute>} />
-            <Route path="/Dashboard" element= {<Dashboard />} />
+            <Route path="/Dashboard/*" element= {<Dashboard />} />
             <Route path="/DaCancellare" element=  {<TaskBoard />} />
           </Routes>
         
