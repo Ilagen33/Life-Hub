@@ -1,14 +1,18 @@
 //Home.jsx
 import React from "react";
 import MyNav from "../../Components/Navbar.jsx"
+import Typewriter from "../../Components/Typewriter.jsx"; // Importa il componente Typewriter
 
 export default function Home() {
     return(
         <div className="Landing-page">
             <MyNav />
             <div className="home-hero">
-                <h1>LIFE HUB</h1>
-                <h2>ALL-IN-ONE PLATFORM</h2>
+                {/* Effetto macchina da scrivere su <h1> */}
+                <h1>
+                    <Typewriter text="LIFE HUB" speed={150} />
+                </h1>
+                <h2 className="bounceInDown">ALL-IN-ONE PLATFORM</h2>
 
                 <h3>Una piattaforma intuitiva e sicura per gestire la tua vita personale. 
                     Con LifeHub, semplifichi la tua giornata, tieni traccia di ogni impegno e riflessione, mantieni tutto sotto controllo in un unico posto. 

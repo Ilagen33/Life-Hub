@@ -463,3 +463,50 @@ Sezione info utente e modale per modifica dell'avatar */
   .diary-page ul li audio {
     margin-top: 10px;
   }
+
+
+  /* Typewriter.css */
+  /* Animazione h1 home page */
+.typewriter {
+    font-family: monospace;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  
+  .cursor {
+    display: inline-block;
+    background-color: black;
+    width: 2px;
+    animation: blink 0.7s step-start infinite;
+  }
+  
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* Aggiungi l'animazione di discesa e rimbalzo */
+  @keyframes bounceInDown {
+    0% {
+      transform: translateY(-100vh) scaleY(-1) rotate(180deg); /* Partenza fuori dallo schermo */
+      opacity: 0; /* Invisibile */
+    }
+    60% {
+      transform: translateY(20px) scaleY(-1) rotate(90deg); /* Oltrepassa leggermente il punto finale */
+      opacity: 1; /* Visibile */
+    }
+    80% {
+      transform: translateY(-10px) scaleY(-1) rotate(90deg); /* Rimbalzo */
+    }
+    100% {
+      transform: translateY(0)  rotate(-90deg); /* Punto finale */
+    }
+  }
+  
+  .bounceInDown {
+    animation: bounceInDown 1.5s ease forwards;
+  }
+  
+  
